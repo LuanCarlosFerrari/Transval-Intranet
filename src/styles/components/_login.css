@@ -16,13 +16,13 @@
     gap: var(--spacing-sm);
     width: var(--button-width);
     padding: var(--spacing-sm);
-    margin-top: 20px; /* Add this line to increase top margin */
-    margin-right: 20px; /* Add this line to increase right margin */
+    margin-top: 20px;
+    margin-right: 20px;
 }
 
 /* Or target the buttons directly */
 .button-container.logged-in .action-button {
-    margin: 10px 0; /* Add margin to individual buttons */
+    margin: 10px 0;
 }
 
 /* Styling for the login button */
