@@ -11,7 +11,7 @@
             "./pdf"
         ]
     ],
-    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.CustomBrowser": "microsoft-edge",
     "liveServer.settings.ignoreFiles": [
         ".vscode/**",
         "**/*.scss",

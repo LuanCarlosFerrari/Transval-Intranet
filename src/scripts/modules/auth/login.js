@@ -78,16 +78,8 @@ function initDownloadsButton() {
                     <div class="downloads-grid">
                         <div class="download-item">
                             <i class="fas fa-file-pdf"></i>
-                            <h3>Apostila Gerencial - Módulo 1</h3>
-                            <a href="src/downloads/apostila_gerencial_modulo1.pdf" 
-                               download 
-                               class="download-button"
-                               data-filetype="pdf">Baixar PDF</a>
-                        </div>
-                        <div class="download-item">
-                            <i class="fas fa-file-pdf"></i>
-                            <h3>Apostila Gerencial - Módulo 2</h3>
-                            <a href="src/downloads/apostila_gerencial_modulo2.pdf" 
+                            <h3>Apostila Gerencial - Capa Nova</h3>
+                            <a href="src/downloads/Apostila Gerencial - Capa Nova.pdf" 
                                download 
                                class="download-button"
                                data-filetype="pdf">Baixar PDF</a>
