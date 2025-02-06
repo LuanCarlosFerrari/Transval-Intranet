@@ -93,22 +93,6 @@ function initDownloadsButton() {
                                data-filetype="pdf">Baixar PDF</a>
                         </div>
                         <!-- Existing downloads -->
-                        <div class="download-item">
-                            <i class="fas fa-file-pdf"></i>
-                            <h3>RH Recrutamento</h3>
-                            <a href="src/downloads/MANUAL - RH RECRUTAMENTO.pdf" 
-                               download 
-                               class="download-button"
-                               data-filetype="pdf">Baixar PDF</a>
-                        </div>
-                        <div class="download-item">
-                            <i class="fas fa-file-pdf"></i>
-                            <h3>Relatório de Gestão - A Faturar</h3>
-                            <a href="src/downloads/MANUAL - Relatório de gestão - A faturar.pdf" 
-                               download 
-                               class="download-button"
-                               data-filetype="pdf">Baixar PDF</a>
-                        </div>
                     </div>
                 </div>
             `;
