@@ -10,7 +10,7 @@ body {
     display: flex;
     flex-direction: column;
     /* Update the background image path */
-    background-image: url('../../Assests/wp3704699-logistics-wallpapers.jpg');
+    background-image: url('../../Assets/wp3704699-logistics-wallpapers.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

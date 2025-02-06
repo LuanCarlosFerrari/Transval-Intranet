@@ -3,7 +3,7 @@ import { updateActiveState } from '../utils/domUtils.js';
 export const aboutContent = {
     history: `
         <div class="history-content">
-            <img src="src/Assests/LOGO-APP.png" alt="Logo Transval" class="history-logo">
+            <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="history-logo">
             <button class="back-button tab-button">Voltar</button>
             <p class="company-history">Bem-vindo à nossa história e ao nosso time!</p>
             <p class="company-history">Somos uma empresa com raízes familiares, fundada em 1987 por Onevaldo e Valmir. Desde o início, nossa trajetória tem sido marcada pelo compromisso com a qualidade e a eficiência.</p>
@@ -18,7 +18,7 @@ export const aboutContent = {
     `,
     mission: `
         <div class="mission-content">
-            <img src="src/Assests/LOGO-APP.png" alt="Logo Transval" class="mission-logo">
+            <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="mission-logo">
             <button class="back-button tab-button">Voltar</button>
             <p class="company-history"><strong>Nosso Propósito:</strong></p>
             <p class="company-history">Ser um parceiro estratégico dos nossos clientes e transformar a logística nacional com soluções eficientes, transparentes e seguras. Nosso compromisso é entregar qualidade, pontualidade e inovação, atender às necessidades específicas de cada cliente e promover a sustentabilidade, contribuindo ativamente para o avanço do agronegócio e da indústria.</p>
@@ -44,7 +44,7 @@ export const aboutContent = {
 export function initAboutSection() {
     const content = `
         <div class="initial-view">
-            <img src="src/Assests/LOGO-APP.png" alt="Logo Transval" class="company-logo">
+            <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="company-logo">
             <div class="button-group">
                 <button class="tab-button" data-tab="history">História da Empresa</button>
                 <button class="tab-button" data-tab="mission">Missão e Valores</button>
