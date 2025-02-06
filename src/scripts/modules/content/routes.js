@@ -27,9 +27,9 @@ export function initRoutesSection() {
             </div>
             
             <div class="route-options">
-                <button class="calculate-route" onclick="calculateRoute()">Calcular Rota</button>
-                <button class="calculate-route" onclick="addWaypoint()">Adicionar Parada</button>
-                <button class="calculate-route" onclick="optimizeRoute()">Otimizar Rota</button>
+                <button class="calculate-route">Calcular Rota</button>
+                <button class="calculate-route">Adicionar Parada</button>
+                <button class="calculate-route">Otimizar Rota</button>
             </div>
             
             <div id="routeMap" class="route-map"></div>
@@ -61,6 +61,8 @@ let map;
 let waypoints = [];
 let markers = [];
 let currentRoute = null;
+let directionsService;
+let directionsRenderer;
 
 export function initRouteCalculator() {
     setTimeout(() => {
@@ -68,15 +70,15 @@ export function initRouteCalculator() {
         if (!mapElement) return;
 
         // Initialize Google Maps services
-        const directionsService = new google.maps.DirectionsService();
-        const directionsRenderer = new google.maps.DirectionsRenderer();
-        
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer();
+
         map = new google.maps.Map(mapElement, {
             zoom: 4,
             center: { lat: -15.793889, lng: -47.882778 },
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
-        
+
         directionsRenderer.setMap(map);
 
         // Initialize autocomplete for input fields
@@ -85,12 +87,17 @@ export function initRouteCalculator() {
         initAutocomplete(originInput, 'br');
         initAutocomplete(destinationInput, 'br');
 
-        // Add click event listener to calculate button
-        const calculateButton = document.querySelector('.calculate-route');
-        if (calculateButton) {
-            calculateButton.onclick = null; // Remove inline handler
-            calculateButton.addEventListener('click', handleCalculateButtonClick);
-        }
+        // Add click event listeners to all calculate buttons
+        document.querySelectorAll('.calculate-route').forEach(button => {
+            button.onclick = null; // Remove inline handler
+            if (button.textContent === 'Calcular Rota') {
+                button.addEventListener('click', handleCalculateButtonClick);
+            } else if (button.textContent === 'Adicionar Parada') {
+                button.addEventListener('click', addWaypoint);
+            } else if (button.textContent === 'Otimizar Rota') {
+                button.addEventListener('click', optimizeRoute);
+            }
+        });
 
         // Initialize axle change listener
         initAxleChangeListener();
@@ -122,7 +129,7 @@ function handleCalculateButtonClick() {
 function calculateRoute() {
     const origin = document.getElementById('origin').value;
     const destination = document.getElementById('destination').value;
-    
+
     if (!origin || !destination) {
         alert('Por favor, preencha origem e destino');
         return;
@@ -134,22 +141,22 @@ function calculateRoute() {
     const request = {
         origin: origin,
         destination: destination,
-        waypoints: waypoints,
+        waypoints: waypoints.map(wp => ({
+            location: wp,
+            stopover: true
+        })),
         travelMode: google.maps.TravelMode.DRIVING,
         optimizeWaypoints: true,
         provideRouteAlternatives: false
     };
 
     directionsService.route(request, (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
+        if (status === 'OK') {
             directionsRenderer.setDirections(result);
-            currentRoute = result; // Store the current route
-            
-            // Clear and recalculate toll markers
+            currentRoute = result;
+
             clearTollMarkers();
             addTollLocations(result.routes[0]);
-            
-            // Update route details with new toll calculations
             displayRouteDetails(result);
         } else {
             alert('Não foi possível calcular a rota: ' + status);
@@ -163,11 +170,11 @@ window.calculateRoute = calculateRoute;
 // Calculate toll cost based on distance and number of axles
 function calculateToll(route, axles) {
     const baseTollRate = 0.15; // Base toll rate per axle per kilometer
-    const distance = route.routes[0].legs.reduce((total, leg) => 
+    const distance = route.routes[0].legs.reduce((total, leg) =>
         total + leg.distance.value, 0) / 1000; // Convert to kilometers
-    
+
     const tollCost = distance * baseTollRate * axles;
-    
+
     return tollCost.toFixed(2);
 }
 
@@ -176,26 +183,26 @@ function displayRouteDetails(result) {
     const route = result.routes[0];
     let totalDistance = 0;
     let totalTime = 0;
-    
+
     route.legs.forEach(leg => {
         totalDistance += leg.distance.value;
         totalTime += leg.duration.value;
     });
-    
+
     const axles = parseInt(document.getElementById('axles').value);
     const tollCost = calculateToll(result, axles);
-    
-    document.getElementById('totalDistance').textContent = 
+
+    document.getElementById('totalDistance').textContent =
         `${Math.round(totalDistance / 1000)} km`;
-    document.getElementById('totalTime').textContent = 
+    document.getElementById('totalTime').textContent =
         formatTime(totalTime);
-    document.getElementById('estimatedToll').textContent = 
+    document.getElementById('estimatedToll').textContent =
         `R$ ${tollCost}`;
-        
+
     // Display waypoints
     const waypointsList = document.getElementById('waypointsList');
     waypointsList.innerHTML = '';
-    
+
     route.legs.forEach((leg, index) => {
         const waypoint = document.createElement('div');
         waypoint.className = 'waypoint-item';
@@ -208,7 +215,7 @@ function displayRouteDetails(result) {
     const averageTollCost = (Math.random() * 10 + 5 * axles).toFixed(2);
     const totalTollCost = (totalTolls * averageTollCost).toFixed(2);
 
-    document.getElementById('estimatedToll').textContent = 
+    document.getElementById('estimatedToll').textContent =
         `R$ ${totalTollCost} (${totalTolls} pedágios)`;
 }
 
@@ -223,13 +230,20 @@ function formatTime(seconds) {
 function addWaypoint() {
     const waypointInput = document.createElement('div');
     waypointInput.className = 'input-group';
+    const inputId = `waypoint-${waypoints.length}`;
     waypointInput.innerHTML = `
-        <label>Parada ${waypoints.length + 1}:</label>
-        <input type="text" placeholder="Digite o local da parada">
+        <label for="${inputId}">Parada ${waypoints.length + 1}:</label>
+        <input type="text" id="${inputId}" placeholder="Digite o local da parada">
     `;
-    
+
     document.querySelector('.route-inputs').appendChild(waypointInput);
-    new google.maps.places.Autocomplete(waypointInput.querySelector('input'));
+    const input = waypointInput.querySelector('input');
+    initAutocomplete(input, 'br');
+
+    input.addEventListener('change', () => {
+        const index = parseInt(input.id.split('-')[1]);
+        waypoints[index] = input.value;
+    });
 }
 
 // Optimize the current route
@@ -238,7 +252,7 @@ function optimizeRoute() {
         ...currentRequest,
         optimizeWaypoints: true
     };
-    
+
     calculateRoute();
 }
 
@@ -264,15 +278,15 @@ const AXLE_MULTIPLIERS = {
 function addTollLocations(route) {
     clearTollMarkers();
     const axles = parseInt(document.getElementById('axles').value);
-    
+
     // Get route details
     const path = route.overview_path;
     const totalDistance = route.legs.reduce((total, leg) => total + leg.distance.value, 0) / 1000;
-    
+
     const baseTollRatePerKm = 0.10; // Base toll rate per km per axle
     const averageTollDistance = 100; // Average distance between toll plazas in Brazil
     const estimatedTolls = Math.max(Math.ceil(totalDistance / averageTollDistance), 1);
-    
+
     // Calculate toll points
     const checkPoints = [];
     for (let i = 0; i < estimatedTolls; i++) {
@@ -291,8 +305,8 @@ function addTollLocations(route) {
 
         // Updated toll price calculation with axle multiplier
         const tollPrice = (
-            baseTollRatePerKm * 
-            segmentDistance * 
+            baseTollRatePerKm *
+            segmentDistance *
             axleMultiplier *
             regionalFactor
         ).toFixed(2);
@@ -330,7 +344,7 @@ function addTollLocations(route) {
     });
 
     const totalTollCost = markers.reduce((total, marker) => total + marker.price, 0);
-    document.getElementById('estimatedToll').textContent = 
+    document.getElementById('estimatedToll').textContent =
         `R$ ${totalTollCost.toFixed(2)} (${markers.length} pedágios)`;
 }
 
