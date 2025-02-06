@@ -1,0 +1,20 @@
+{
+    "liveServer.settings.port": 5501,
+    "liveServer.settings.root": "./",
+    "liveServer.settings.mount": [
+        ["/src", "./src"],
+        ["/pdf", "./pdf"]  // Add PDF directory mounting
+    ],
+    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.ignoreFiles": [
+        ".vscode/**",
+        "**/*.scss",
+        "**/*.sass"
+    ],
+    "liveServer.settings.https": {
+        "enable": true,
+        "cert": "",
+        "key": "",
+        "passphrase": ""
+    }
+}
