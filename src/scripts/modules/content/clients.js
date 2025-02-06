@@ -7,7 +7,7 @@ export function initClientsSection() {
                 <h3>Rumo Logística</h3>
             </div>
             <div class="client-box" role="article" aria-label="Client Information" onclick="window.open('https://www.ldc.com/br/pt/', '_blank')">
-                <img src="src/Assests/clients/ldc.png" alt="LDC" class="client-logo">
+                <img src="src/Assests/clients/LDC.png" alt="LDC" class="client-logo">
                 <h3>LDC</h3>
             </div>
             <div class="client-box" role="article" aria-label="Client Information" onclick="window.open('https://www.viterra.us/', '_blank')">
