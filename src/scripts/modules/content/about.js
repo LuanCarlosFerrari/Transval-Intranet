@@ -5,11 +5,12 @@ export const aboutContent = {
         <div class="history-content">
             <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="history-logo">
             <button class="back-button tab-button">Voltar</button>
-            <p class="company-history">Bem-vindo à nossa história e ao nosso time!</p>
+            
+            <p class="company-history"><strong>Nossa História:</strong></p>
             <p class="company-history">Somos uma empresa com raízes familiares, fundada em 1987 por Onevaldo e Valmir. Desde o início, nossa trajetória tem sido marcada pelo compromisso com a qualidade e a eficiência.</p>
             <p class="company-history">Nossa sede administrativa está localizada em Rinópolis, no interior de São Paulo, onde tudo começou. É daqui que coordenamos nossas operações e mantemos vivos os valores que nos trouxeram até aqui.</p>
             <p class="company-history">Com o passar do tempo e visando ampliar nossa atuação, estabelecemos pontos estratégicos em Rondonópolis, MT, e Sumaré, SP. Esses locais contam com escritório e estrutura dedicada à frota, fortalecendo nossa presença e eficiência operacional.</p>
-            <p class="company-history">Operamos com uma infraestrutura que garante excelência no atendimento:</p>
+            <p class="company-history"><strong>Operamos com uma infraestrutura que garante excelência no atendimento:</strong></p>
             <ul class="company-history">
                 <li>Frota própria, proporcionando agilidade, controle e maior eficiência no transporte de cargas.</li>
                 <li>Agenciamento de cargas, conectando soluções logísticas e facilitando operações em todo o território brasileiro.</li>
@@ -22,23 +23,33 @@ export const aboutContent = {
         <div class="mission-content">
             <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="mission-logo">
             <button class="back-button tab-button">Voltar</button>
+            
             <p class="company-history"><strong>Nosso Propósito:</strong></p>
             <p class="company-history">Ser um parceiro estratégico dos nossos clientes e transformar a logística nacional com soluções eficientes, transparentes e seguras. Nosso compromisso é entregar qualidade, pontualidade e inovação, atender às necessidades específicas de cada cliente e promover a sustentabilidade, contribuindo ativamente para o avanço do agronegócio e da indústria.</p>
+            
             <p class="company-history"><strong>Nossos Princípios:</strong></p>
-            <p class="company-history"><strong>• Foco no Cliente e nos Resultados</strong><br>
-            Priorizar as necessidades dos clientes, buscando sempre entregar soluções ágeis, eficazes e com resultados positivos.</p>
-            <p class="company-history"><strong>• Agilidade e Rapidez</strong><br>
-            Responder de forma célere e eficiente, reconhecendo a importância do tempo na construção de relações de sucesso.</p>
-            <p class="company-history"><strong>• Qualidade e Excelência</strong><br>
-            Garantir processos e entregas de alta qualidade, desenvolvendo com precisão o que foi proposto.</p>
-            <p class="company-history"><strong>• Responsabilidade e Compromisso</strong><br>
-            Assumir responsabilidades, agir com ética, transparência e dedicação em todas as ações e decisões.</p>
-            <p class="company-history"><strong>• Comunicação e Colaboração</strong><br>
-            Promover integração entre as áreas, garantindo uma comunicação clara e eficaz para alcançar objetivos comuns.</p>
-            <p class="company-history"><strong>• Segurança e Confiabilidade</strong><br>
-            Assegurar a execução segura de todas as atividades, conectando pessoas e negócios com confiança.</p>
-            <p class="company-history"><strong>• Trabalho em Equipe e Integração</strong><br>
-            Valorizar o espírito colaborativo, unindo esforços para superar desafios e alcançar metas com eficiência.</p>
+            <ul class="company-history">
+                <li><strong>Foco no Cliente e nos Resultados</strong>
+                    Priorizar as necessidades dos clientes, buscando sempre entregar soluções ágeis, eficazes e com resultados positivos.</li>
+                
+                <li><strong>Agilidade e Rapidez</strong>
+                    Responder de forma célere e eficiente, reconhecendo a importância do tempo na construção de relações de sucesso.</li>
+                
+                <li><strong>Qualidade e Excelência</strong>
+                    Garantir processos e entregas de alta qualidade, desenvolvendo com precisão o que foi proposto.</li>
+                
+                <li><strong>Responsabilidade e Compromisso</strong>
+                    Assumir responsabilidades, agir com ética, transparência e dedicação em todas as ações e decisões.</li>
+                
+                <li><strong>Comunicação e Colaboração</strong>
+                    Promover integração entre as áreas, garantindo uma comunicação clara e eficaz para alcançar objetivos comuns.</li>
+                
+                <li><strong>Segurança e Confiabilidade</strong>
+                    Assegurar a execução segura de todas as atividades, conectando pessoas e negócios com confiança.</li>
+                
+                <li><strong>Trabalho em Equipe e Integração</strong>
+                    Valorizar o espírito colaborativo, unindo esforços para superar desafios e alcançar metas com eficiência.</li>
+            </ul>
         </div>
     `
 };
