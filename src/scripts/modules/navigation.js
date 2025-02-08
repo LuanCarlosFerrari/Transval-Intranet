@@ -6,13 +6,15 @@ import { initLGPDSection } from './content/lgpd.js';
 import { initClientsSection } from './content/clients.js';
 import { initRoutesSection, initRouteCalculator } from './content/routes.js';
 import { updateActiveState } from './utils/domUtils.js';
+import { initQuickContactsSection } from './content/quickContacts.js';
 
 export function initNavigation() {
-  document.querySelectorAll('.nav-item').forEach(item => {
+  // Event listener for regular nav items
+  document.querySelectorAll('.nav-item, [data-content]').forEach(item => {
     item.addEventListener('click', () => {
       const contentArea = document.querySelector('.content-area');
-      
-      switch(item.dataset.content) {
+
+      switch (item.dataset.content) {
         case 'sobre':
           contentArea.innerHTML = initAboutSection();
           break;
@@ -45,8 +47,11 @@ export function initNavigation() {
         case 'downloads':
           contentArea.innerHTML = initDownloadsSection();
           break;
+        case 'contacts':
+          contentArea.innerHTML = initQuickContactsSection();
+          break;
       }
-      
+
       updateActiveState(item, '.nav-item');
 
       // Initialize specific events after content is loaded
@@ -69,10 +74,19 @@ export function initNavigation() {
       }
     });
   });
+
+  // Específico para o botão de contatos
+  const contactsBtn = document.getElementById('contactsBtn');
+  if (contactsBtn) {
+    contactsBtn.addEventListener('click', () => {
+      const contentArea = document.querySelector('.content-area');
+      contentArea.innerHTML = initQuickContactsSection();
+    });
+  }
 }
 
 // Add global initialization function
-window.initMap = function() {
+window.initMap = function () {
   const currentTab = document.querySelector('.nav-item.active');
   if (currentTab) {
     if (currentTab.dataset.content === 'unidades') {

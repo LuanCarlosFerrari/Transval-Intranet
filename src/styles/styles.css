@@ -17,6 +17,7 @@
 @import 'components/_news.css';
 @import 'components/_routes.css';
 @import 'components/_downloads.css';
+@import 'components/_quickContacts.css';
 
 /* Pages */
 @import 'pages/_about.css';

@@ -1,7 +1,7 @@
 export function initLGPDSection() {
     return `
-        <div class="lgpd-content">
-            <h1 class="company-title">LGPD</h1>
+        <div class="titulo-container">
+            <h2>LGPD</h2>
             <div class="button-group">
                 <a href="https://www.transval.net.br/lgpd.pdf" class="tab-button" target="_blank">
                     Baixar Política de Privacidade
