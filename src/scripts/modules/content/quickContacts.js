@@ -5,7 +5,7 @@ const quickContactsData = [
             {
                 name: "Ruan",
                 icon: "fa-user",
-                info: "Wpp: (18)99648-1429\nCorp: (18)98177-0855\nEmail: ruan@transval.net.br\nRinópolis-SP"
+                info: "tel: (18)98177-0855\nEmail:\nruan@transval.net.br"
             },
             { name: "Fabrícia", icon: "fa-user", info: "" },
             { name: "Ana", icon: "fa-user", info: "" }
@@ -15,7 +15,7 @@ const quickContactsData = [
         title: "Contas a Receber",
         contacts: [
             {
-                name: "Elizabete (SP)",
+                name: "Elizabete",
                 icon: "fa-money-bill",
                 info: "Tel: (18)98185-1049\nEmail: financeirorinopolis@transval.net.br"
             },
@@ -38,12 +38,12 @@ const quickContactsData = [
             {
                 name: "Silvania",
                 icon: "fa-file-invoice",
-                info: "Tel: (19)99876-9816\nEmail: faturamentosumare8@transval.net.br\nSumaré/SP"
+                info: "Tel: (19)99876-9816\nEmail: faturamentosumare8@transval.net.br"
             },
             {
                 name: "Amanda Inacio",
                 icon: "fa-file-invoice",
-                info: "Tel: (19)98292-0003\nEmail: faturamentosumare4@transval.net.br\nSumaré/SP"
+                info: "Tel: (19)98292-0003\nEmail: faturamentosumare4@transval.net.br"
             }
         ]
     },
@@ -68,17 +68,17 @@ const quickContactsData = [
             {
                 name: "Atirson (Frota SP)",
                 icon: "fa-truck",
-                info: "Tel: (18)98185-0214\nEmail: atirson@transval.net.br\nR. Luiz Wolff, 07 - Rinopolis/SP"
+                info: "Tel: (18)98185-0214\nEmail: atirson@transval.net.br"
             },
             {
                 name: "Vitor (Frota SP)",
                 icon: "fa-truck",
-                info: "Tel: (18)98184-0288\nEmail: vitor@transval.net.br\nR. Luiz Wolff, 07 - Rinopolis/SP"
+                info: "Tel: (18)98184-0288\nEmail: vitor@transval.net.br"
             },
             {
-                name: "Ronaldo Balestrin Gomes",
+                name: "Ronaldo Balestrin Gomes (Frota MT)",
                 icon: "fa-truck",
-                info: "Tel: (66)98129-0092\nEmail: logistica2@transval.net.br\nAv Dos Transportes 1609 Rondonopolis/MT"
+                info: "Tel: (66)98129-0092\nEmail: logistica2@transval.net.br"
             }
         ]
     },
@@ -88,27 +88,27 @@ const quickContactsData = [
             {
                 name: "Mislaine Resende",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99622-3227\nRondonópolis/MT"
+                info: "Tel: (66)99622-3227"
             },
             {
                 name: "Gislaine Rocha",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99719-8331\nRondonópolis/MT"
+                info: "Tel: (66)99719-8331"
             },
             {
                 name: "Taissa Lorayne",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99909-7207\nRondonópolis/MT"
+                info: "Tel: (66)99909-7207"
             },
             {
                 name: "Lorrayne Cristina",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99243-1018\nRondonópolis/MT"
+                info: "Tel: (66)99243-1018"
             },
             {
                 name: "Lilian Payão",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99220-8501\nRondonópolis/MT"
+                info: "Tel: (66)99220-8501"
             }
         ]
     },
@@ -128,17 +128,17 @@ const quickContactsData = [
             {
                 name: "Cassyklei",
                 icon: "fa-truck-loading",
-                info: "Tel: (66)99628-2538\nEmail: cassyklei@transval.net.br\nRondonopolis/MT"
+                info: "Tel: (66)99628-2538\nEmail: cassyklei@transval.net.br"
             },
             {
                 name: "João Elias Mercia Costa",
                 icon: "fa-truck-loading",
-                info: "Tel: (66)98467-7870\nEmail: logistica7@transval.net.br\nRondonopolis/MT"
+                info: "Tel: (66)98467-7870\nEmail: logistica7@transval.net.br"
             },
             {
                 name: "Luiz Felippe Claudino da Silva",
                 icon: "fa-truck-loading",
-                info: "Tel: (66)99224-8420\nEmail: logistica8@transval.net.br\nRondonopolis/MT"
+                info: "Tel: (66)99224-8420\nEmail: logistica8@transval.net.br"
             }
         ]
     },
@@ -148,22 +148,22 @@ const quickContactsData = [
             {
                 name: "Alex",
                 icon: "fa-calculator",
-                info: "Tel: (14)99663-5979\nEmail: contabilmatriz@transval.net.br\nRinópolis/SP"
+                info: "Tel: (14)99663-5979\nEmail: contabilmatriz@transval.net.br"
             },
             {
                 name: "Daniella",
                 icon: "fa-calculator",
-                info: "Tel: (14)99850-3891\nEmail: contabilmatriz1@transval.net.br\nRinópolis/SP"
+                info: "Tel: (14)99850-3891\nEmail: contabilmatriz1@transval.net.br"
             },
             {
                 name: "Jonatas",
                 icon: "fa-calculator",
-                info: "Tel: (18)99743-4469\nEmail: contabilmatriz2@transval.net.br\nRinópolis/SP"
+                info: "Tel: (18)99743-4469\nEmail: contabilmatriz2@transval.net.br"
             },
             {
                 name: "Rafaela",
                 icon: "fa-calculator",
-                info: "Tel: (18)99603-8990\nEmail: contabilmatriz4@transval.net.br\nRinópolis/SP"
+                info: "Tel: (18)99603-8990\nEmail: contabilmatriz4@transval.net.br"
             }
         ]
     },
@@ -173,17 +173,17 @@ const quickContactsData = [
             {
                 name: "Emerson Luciano Tomasela",
                 icon: "fa-check-double",
-                info: "Tel: (18)98177-0239\nEmail: faturamentosp@transval.net.br\nRua Luiz Wolff 07 - Rinópolis/SP"
+                info: "Tel: (18)98177-0239\nEmail: faturamentosp@transval.net.br"
             },
             {
                 name: "Naiara Cristina R. Sanchez",
                 icon: "fa-check-double",
-                info: "Tel: (18)99797-9474\nEmail: faturamentosp3@transval.net.br\nRua Luiz Wolff 07 - Rinópolis/SP"
+                info: "Tel: (18)99797-9474\nEmail: faturamentosp3@transval.net.br"
             },
             {
                 name: "Bruno Henrique",
                 icon: "fa-check-double",
-                info: "Tel: (18)99818-5606\nEmail: faturamentosp5@transval.net.br\nRua Luiz Wolff 07 - Rinópolis/SP"
+                info: "Tel: (18)99818-5606\nEmail: faturamentosp5@transval.net.br"
             }
         ]
     }
