@@ -39,18 +39,10 @@ export function initLogin() {
             loginBtn.textContent = 'Logout';
             sessionStorage.setItem('isLoggedIn', 'true');
             modal.style.display = 'none';
-            
-            // Initialize downloads button functionality after login
-            initDownloadsButton();
         } else {
             alert('Usuário ou senha incorretos.');
         }
     });
-
-    // Initialize downloads button if user is already logged in
-    if (sessionStorage.getItem('isLoggedIn')) {
-        initDownloadsButton();
-    }
 
     const postLoginButtons = document.querySelectorAll('.button-container button');
     const postLoginContents = document.querySelectorAll('.post-login-content');
@@ -65,47 +57,4 @@ export function initLogin() {
             postLoginBoxes[index].classList.add('active');
         });
     });
-}
-
-function initDownloadsButton() {
-    const downloadsBtn = document.getElementById('downloadsBtn');
-    if (downloadsBtn) {
-        downloadsBtn.addEventListener('click', () => {
-            const contentArea = document.querySelector('.content-area');
-            contentArea.innerHTML = `
-                <div class="downloads-container">
-                    <h2>Arquivos para Download</h2>
-                    <div class="downloads-grid">
-                        <div class="download-item">
-                            <i class="fas fa-file-pdf"></i>
-                            <h3>Apostila Gerencial - Capa Nova</h3>
-                            <a href="src/downloads/Apostila Gerencial - Capa Nova.pdf" 
-                               download 
-                               class="download-button"
-                               data-filetype="pdf">Baixar PDF</a>
-                        </div>
-                        <!-- Existing downloads -->
-                    </div>
-                </div>
-            `;
-
-            // Add file validation
-            document.querySelectorAll('.download-button').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const file = e.target.getAttribute('href');
-                    fetch(file, { method: 'HEAD' })
-                        .then(response => {
-                            if (!response.ok) {
-                                e.preventDefault();
-                                alert('Arquivo não encontrado');
-                            }
-                        })
-                        .catch(() => {
-                            e.preventDefault();
-                            alert('Erro ao acessar arquivo');
-                        });
-                });
-            });
-        });
-    }
 }
