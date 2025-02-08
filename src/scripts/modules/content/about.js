@@ -10,8 +10,10 @@ export const aboutContent = {
             <p class="company-history">Nossa sede administrativa está localizada em Rinópolis, no interior de São Paulo, onde tudo começou. É daqui que coordenamos nossas operações e mantemos vivos os valores que nos trouxeram até aqui.</p>
             <p class="company-history">Com o passar do tempo e visando ampliar nossa atuação, estabelecemos pontos estratégicos em Rondonópolis, MT, e Sumaré, SP. Esses locais contam com escritório e estrutura dedicada à frota, fortalecendo nossa presença e eficiência operacional.</p>
             <p class="company-history">Operamos com uma infraestrutura que garante excelência no atendimento:</p>
-            <p class="company-history">• Frota própria, proporcionando agilidade, controle e maior eficiência no transporte de cargas.</p>
-            <p class="company-history">• Agenciamento de cargas, conectando soluções logísticas e facilitando operações em todo o território brasileiro.</p>
+            <ul class="company-history">
+                <li>Frota própria, proporcionando agilidade, controle e maior eficiência no transporte de cargas.</li>
+                <li>Agenciamento de cargas, conectando soluções logísticas e facilitando operações em todo o território brasileiro.</li>
+            </ul>
             <p class="company-history">Além disso, contamos com unidades de embarque estrategicamente localizadas em várias regiões do Brasil, o que amplia nosso alcance e nossa capacidade de atender às mais diversas necessidades de nossos clientes.</p>
             <p class="company-history">Estamos felizes por você fazer parte do nosso time e contribuir para o nosso crescimento!</p>
         </div>
@@ -87,7 +89,7 @@ function handleTabButtonClick(button, initialView, tabContents) {
         // Hide initial view, show selected content
         initialView.style.display = 'none';
         const tabId = button.dataset.tab;
-        
+
         tabContents.forEach(content => {
             if (content.id === tabId) {
                 content.style.display = 'block';
