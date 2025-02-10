@@ -199,3 +199,23 @@
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-lg);
 }
+
+.downloads-table {
+    border-spacing: var(--spacing-lg);
+    border-collapse: separate;
+    width: 100%;
+}
+
+.downloads-table td {
+    width: 50%;
+    vertical-align: top;
+}
+
+.downloads-table .department-group {
+    margin-bottom: 0;
+}
+
+.downloads-table .download-item {
+    height: 100%;
+    margin-bottom: 0;
+}

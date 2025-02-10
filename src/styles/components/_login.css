@@ -1,6 +1,7 @@
 /* Container for the login section */
 .login-container {
     margin-left: auto;
+    margin-right: 5px; /* Ajuste este valor para aumentar ou diminuir a margem direita */
     padding: 0 var(--spacing-md);
 }
 
@@ -17,7 +18,7 @@
     width: var(--button-width);
     padding: var(--spacing-sm);
     margin-top: 20px;
-    margin-right: 20px;
+    margin-right: 40px;
 }
 
 /* Or target the buttons directly */
@@ -27,18 +28,21 @@
 
 /* Styling for the login button */
 .login-button {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 5px 20px; /* Aumenta o padding horizontal e vertical */
+    font-size: 1.1rem; /* Aumenta o tamanho da fonte */
+    min-width: 100px; /* Define uma largura mínima */
     background-color: var(--color-primary);
-    color: var(--color-white);
+    color: white;
     border: none;
-    border-radius: var(--border-radius-sm);
+    border-radius: 4px;
     cursor: pointer;
-    transition: var(--transition-base);
+    transition: background-color 0.3s;
 }
 
 /* Hover effect for the login button */
 .login-button:hover {
     background-color: var(--color-primary-dark);
+    transform: translateY(-2px); /* Adiciona um efeito hover */
 }
 
 /* Styling for the modal */
