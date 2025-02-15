@@ -7,8 +7,6 @@ const quickContactsData = [
                 icon: "fa-user",
                 info: "tel: (18)98177-0855\nEmail:\nruan@transval.net.br"
             },
-            { name: "Fabrícia", icon: "fa-user", info: "" },
-            { name: "Ana", icon: "fa-user", info: "" }
         ]
     },
     {
@@ -19,12 +17,6 @@ const quickContactsData = [
                 icon: "fa-money-bill",
                 info: "Tel: (18)98185-1049\nEmail: financeirorinopolis@transval.net.br"
             },
-            { name: "Fernanda (SP)", icon: "fa-money-bill", info: "" },
-            { name: "Beatriz (SP)", icon: "fa-money-bill", info: "" },
-            { name: "Faiella (SP)", icon: "fa-money-bill", info: "" },
-            { name: "Renata T (MT)", icon: "fa-money-bill", info: "" },
-            { name: "Renata (MT)", icon: "fa-money-bill", info: "" },
-            { name: "Priscila (MT)", icon: "fa-money-bill", info: "" }
         ]
     },
     {
