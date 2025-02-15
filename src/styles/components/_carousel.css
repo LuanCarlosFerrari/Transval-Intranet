@@ -176,7 +176,3 @@
 .progress-dot.active {
     background: #333;
 }
-
-.button-container.logged-in + .carousel {
-    margin-top: 20px; /* Adjust this value as needed */
-}

@@ -10,26 +10,39 @@
     display: none;
 }
 
-/* Display buttons when logged in */
 .button-container.logged-in {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Alterado de 'line' para 'row' que é o valor correto */
     gap: var(--spacing-sm);
-    width: var(--button-width);
+    width: auto; /* Changed from fixed width to auto */
+    min-width: var(--button-width);
     padding: var(--spacing-sm);
-    margin-top: 20px;
-    margin-right: 40px;
+    position: absolute; /* Adicionar posicionamento absoluto */
+    top: 60px; /* Ajuste esta valor conforme necessário */
+    margin-left: 300px;
+    left: 15;
+    z-index: 10; /* Garante que fique acima de outros elementos */
 }
 
-/* Or target the buttons directly */
+/* Ajustando a altura dos botões dentro do container */
 .button-container.logged-in .action-button {
-    margin: 10px 0;
+    margin: 5px 0;
+    padding: 6px 16px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: visible; /* Changed from hidden to visible */
+    min-width: fit-content; /* Added to adjust to content */
+    width: auto; /* Added to allow button growth */
+    font-size: 0.9rem;
 }
 
 /* Styling for the login button */
 .login-button {
     padding: 5px 20px; /* Aumenta o padding horizontal e vertical */
-    font-size: 1.1rem; /* Aumenta o tamanho da fonte */
+    font-size: 1.0rem; /* Aumenta o tamanho da fonte */
     min-width: 100px; /* Define uma largura mínima */
     background-color: var(--color-primary);
     color: white;

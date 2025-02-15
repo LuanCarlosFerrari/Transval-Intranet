@@ -6,7 +6,7 @@
     gap: var(--spacing-md);
     min-height: calc(100vh - 200px);
     margin-bottom: 65px; 
-    margin-top: var(--header-height); 
+    margin-top: 100px; 
 }
 
 /* Styling for content area */
