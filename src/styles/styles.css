@@ -93,15 +93,20 @@
 
 .close-modal {
     color: #777;
-    font-size: 24px;
+    font-size: 18px; /* Reduced from 24px */
     font-weight: bold;
     background: none;
     border: none;
     cursor: pointer;
+    margin-left: 550px;
+    padding: 5px 8px; /* Added compact padding */
+    border-radius: 4px; /* Optional: adds a subtle rounded corner */
+    line-height: 0.8; /* Helps center the × symbol */
 }
 
 .close-modal:hover {
     color: #333;
+    background-color: #f1f1f1; /* Optional: subtle background on hover */
 }
 
 /* Preview Content Styles */
