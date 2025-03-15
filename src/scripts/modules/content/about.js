@@ -7,16 +7,16 @@ export const aboutContent = {
             <button class="back-button tab-button">Voltar</button>
             
             <p class="company-history"><strong>Nossa História:</strong></p>
-            <p class="company-history">Somos uma empresa com raízes familiares, fundada em 1987 por Onevaldo e Valmir. Desde o início, nossa trajetória tem sido marcada pelo compromisso com a qualidade e a eficiência.</p>
-            <p class="company-history">Nossa sede administrativa está localizada em Rinópolis, no interior de São Paulo, onde tudo começou. É daqui que coordenamos nossas operações e mantemos vivos os valores que nos trouxeram até aqui.</p>
-            <p class="company-history">Com o passar do tempo e visando ampliar nossa atuação, estabelecemos pontos estratégicos em Rondonópolis, MT, e Sumaré, SP. Esses locais contam com escritório e estrutura dedicada à frota, fortalecendo nossa presença e eficiência operacional.</p>
-            <p class="company-history"><strong>Operamos com uma infraestrutura que garante excelência no atendimento:</strong></p>
+            <p class="company-history">Somos uma empresa familiar com mais de três décadas de experiência no setor de transportes e logística. Fundada em 1987 por Onevaldo e Valmir, trilhamos uma trajetória de crescimento baseada na qualidade, eficiência e compromisso com nossos clientes.</p>
+            <p class="company-history">Nossa sede administrativa está localizada em Rinópolis, interior de São Paulo, onde tudo começou. A partir daqui, coordenamos nossas operações, sempre guiados pelos valores que nos trouxeram até o presente.</p>
+            <p class="company-history">Para ampliar nossa atuação e otimizar nossos serviços, contamos com unidades estratégicas em <em>Rondonópolis (MT) e Sumaré (SP)</em>, equipadas com escritórios e infraestrutura dedicada à nossa frota, garantindo maior eficiência operacional.</p>
+            <p class="company-history"><strong>Nossa Infraestrutura:</strong></p>
             <ul class="company-history">
-                <li>Frota própria, proporcionando agilidade, controle e maior eficiência no transporte de cargas.</li>
-                <li>Agenciamento de cargas, conectando soluções logísticas e facilitando operações em todo o território brasileiro.</li>
+                <li><em>Frota própria</em>, proporcionando agilidade, controle e segurança no transporte de cargas.</li>
+                <li><em>Agenciamento de cargas</em>, conectando soluções logísticas para atender todo o território brasileiro.</li>
+                <li><em>Unidades de embarque estratégicas</em>, ampliando nosso alcance e capacidade de atendimento.</li>
             </ul>
-            <p class="company-history">Além disso, contamos com unidades de embarque estrategicamente localizadas em várias regiões do Brasil, o que amplia nosso alcance e nossa capacidade de atender às mais diversas necessidades de nossos clientes.</p>
-            <p class="company-history">Estamos felizes por você fazer parte do nosso time e contribuir para o nosso crescimento!</p>
+            <p class="company-history">Comprometidos com a excelência, seguimos evoluindo para oferecer as melhores soluções em transporte e logística.</p>
         </div>
     `,
     mission: `
