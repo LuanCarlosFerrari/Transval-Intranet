@@ -6,17 +6,17 @@ export const aboutContent = {
             <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="history-logo">
             <button class="back-button tab-button">Voltar</button>
             
-            <p class="company-history"><strong>Nossa História:</strong></p>
-            <p class="company-history">Somos uma empresa familiar com mais de três décadas de experiência no setor de transportes e logística. Fundada em 1987 por Onevaldo e Valmir, trilhamos uma trajetória de crescimento baseada na qualidade, eficiência e compromisso com nossos clientes.</p>
-            <p class="company-history">Nossa sede administrativa está localizada em Rinópolis, interior de São Paulo, onde tudo começou. A partir daqui, coordenamos nossas operações, sempre guiados pelos valores que nos trouxeram até o presente.</p>
-            <p class="company-history">Para ampliar nossa atuação e otimizar nossos serviços, contamos com unidades estratégicas em <em>Rondonópolis (MT) e Sumaré (SP)</em>, equipadas com escritórios e infraestrutura dedicada à nossa frota, garantindo maior eficiência operacional.</p>
-            <p class="company-history"><strong>Nossa Infraestrutura:</strong></p>
-            <ul class="company-history">
+            <p class="company-history" style="text-align: center;"><strong>NOSSA HISTÓRIA:</strong></p>
+            <p class="company-history" style="text-align: center;">Somos uma empresa familiar com mais de três décadas de experiência no setor de transportes e logística. Fundada em 1987 por Onevaldo e Valmir, trilhamos uma trajetória de crescimento baseada na qualidade, eficiência e compromisso com nossos clientes.</p>
+            <p class="company-history" style="text-align: center;">Nossa sede administrativa está localizada em Rinópolis, interior de São Paulo, onde tudo começou. A partir daqui, coordenamos nossas operações, sempre guiados pelos valores que nos trouxeram até o presente.</p>
+            <p class="company-history" style="text-align: center;">Para ampliar nossa atuação e otimizar nossos serviços, contamos com unidades estratégicas em <em>Rondonópolis (MT) e Sumaré (SP)</em>, equipadas com escritórios e infraestrutura dedicada à nossa frota, garantindo maior eficiência operacional.</p>
+            <p class="company-history" style="text-align: center;"><strong>NOSSA INFRAESTRUTURA:</strong></p>
+            <ul class="company-history" style="text-align: center; list-style-position: inside;">
                 <li><em>Frota própria</em>, proporcionando agilidade, controle e segurança no transporte de cargas.</li>
                 <li><em>Agenciamento de cargas</em>, conectando soluções logísticas para atender todo o território brasileiro.</li>
                 <li><em>Unidades de embarque estratégicas</em>, ampliando nosso alcance e capacidade de atendimento.</li>
             </ul>
-            <p class="company-history">Comprometidos com a excelência, seguimos evoluindo para oferecer as melhores soluções em transporte e logística.</p>
+            <p class="company-history" style="text-align: center;">Comprometidos com a excelência, seguimos evoluindo para oferecer as melhores soluções em transporte e logística.</p>
         </div>
     `,
     mission: `
@@ -24,31 +24,31 @@ export const aboutContent = {
             <img src="src/Assets/LOGO-APP.png" alt="Logo Transval" class="mission-logo">
             <button class="back-button tab-button">Voltar</button>
             
-            <p class="company-history"><strong>Nosso Propósito:</strong></p>
-            <p class="company-history">Ser um parceiro estratégico dos nossos clientes e transformar a logística nacional com soluções eficientes, transparentes e seguras. Nosso compromisso é entregar qualidade, pontualidade e inovação, atender às necessidades específicas de cada cliente e promover a sustentabilidade, contribuindo ativamente para o avanço do agronegócio e da indústria.</p>
+            <p class="company-history" style="text-align: center;"><strong>NOSSO PROPÓSITO:</strong></p>
+            <p class="company-history" style="text-align: center;">Ser um parceiro estratégico dos nossos clientes e transformar a logística nacional com soluções eficientes, transparentes e seguras. Nosso compromisso é entregar qualidade, pontualidade e inovação, atender às necessidades específicas de cada cliente e promover a sustentabilidade, contribuindo ativamente para o avanço do agronegócio e da indústria.</p>
             
-            <p class="company-history"><strong>Nossos Princípios:</strong></p>
-            <ul class="company-history">
-                <li><strong>Foco no Cliente e nos Resultados</strong>
-                    Priorizar as necessidades dos clientes, buscando sempre entregar soluções ágeis, eficazes e com resultados positivos.</li>
+            <p class="company-history" style="text-align: center;"><strong>NOSSOS PRINCÍPIOS:</strong></p>
+            <ul class="company-history" style="list-style-type: none; padding-left: 0; text-align: center;">
+                <li style="text-align: center;"><strong>FOCO NO CLIENTE E NOS RESULTADOS</strong></li>
+                <li style="text-align: center;">Priorizar as necessidades dos clientes, buscando sempre entregar soluções ágeis, eficazes e com resultados positivos.</li>
                 
-                <li><strong>Agilidade e Rapidez</strong>
-                    Responder de forma célere e eficiente, reconhecendo a importância do tempo na construção de relações de sucesso.</li>
+                <li style="text-align: center;"><strong>AGILIDADE E RAPIDEZ</strong></li>
+                <li style="text-align: center;">Responder de forma célere e eficiente, reconhecendo a importância do tempo na construção de relações de sucesso.</li>
                 
-                <li><strong>Qualidade e Excelência</strong>
-                    Garantir processos e entregas de alta qualidade, desenvolvendo com precisão o que foi proposto.</li>
+                <li style="text-align: center;"><strong>QUALIDADE E EXCELÊNCIA</strong></li>
+                <li style="text-align: center;">Garantir processos e entregas de alta qualidade, desenvolvendo com precisão o que foi proposto.</li>
                 
-                <li><strong>Responsabilidade e Compromisso</strong>
-                    Assumir responsabilidades, agir com ética, transparência e dedicação em todas as ações e decisões.</li>
+                <li style="text-align: center;"><strong>RESPONSABILIDADE E COMPROMISSO</strong></li>
+                <li style="text-align: center;">Assumir responsabilidades, agir com ética, transparência e dedicação em todas as ações e decisões.</li>
                 
-                <li><strong>Comunicação e Colaboração</strong>
-                    Promover integração entre as áreas, garantindo uma comunicação clara e eficaz para alcançar objetivos comuns.</li>
+                <li style="text-align: center;"><strong>COMUNICAÇÃO E COLABORAÇÃO</strong></li>
+                <li style="text-align: center;">Promover integração entre as áreas, garantindo uma comunicação clara e eficaz para alcançar objetivos comuns.</li>
                 
-                <li><strong>Segurança e Confiabilidade</strong>
-                    Assegurar a execução segura de todas as atividades, conectando pessoas e negócios com confiança.</li>
+                <li style="text-align: center;"><strong>SEGURANÇA E CONFIABILIDADE</strong></li>
+                <li style="text-align: center;">Assegurar a execução segura de todas as atividades, conectando pessoas e negócios com confiança.</li>
                 
-                <li><strong>Trabalho em Equipe e Integração</strong>
-                    Valorizar o espírito colaborativo, unindo esforços para superar desafios e alcançar metas com eficiência.</li>
+                <li style="text-align: center;"><strong>TRABALHO EM EQUIPE E INTEGRAÇÃO</strong></li>
+                <li style="text-align: center;">Valorizar o espírito colaborativo, unindo esforços para superar desafios e alcançar metas com eficiência.</li>
             </ul>
         </div>
     `
