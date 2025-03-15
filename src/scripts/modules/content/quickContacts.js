@@ -3,10 +3,15 @@ const quickContactsData = [
         title: "Recursos Humanos",
         contacts: [
             {
-                name: "Ruan",
+                name: "Ruan Talles SP",
                 icon: "fa-user",
                 info: "tel: (18)98177-0855\nEmail:\nruan@transval.net.br"
             },
+            {
+                name: "Fabricia Melo MT",
+                icon: "fa-user",
+                info: "tel: +55 66 9978-6387\nEmail:"
+            }
         ]
     },
     {
@@ -25,7 +30,7 @@ const quickContactsData = [
             {
                 name: "Maria Helena",
                 icon: "fa-file-invoice",
-                info: "Tel: (19)99925-0103\nEmail: faturamentosumare@transval.net.br"
+                info: "Tel: +55 18 99816-7328\nEmail: faturamentosumare@transval.net.br"
             },
             {
                 name: "Silvania",
@@ -78,29 +83,34 @@ const quickContactsData = [
         title: "Controladoria",
         contacts: [
             {
+                name: "Ellen ",
+                icon: "fa-chart-line",
+                info: "Tel: +55 18 99732-3551\nEmail:"
+            },
+            {
                 name: "Mislaine Resende",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99622-3227"
+                info: "Tel: (66)99622-3227\nEmail:"
             },
             {
                 name: "Gislaine Rocha",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99719-8331"
+                info: "Tel: (66)99719-8331\nEmail:"
             },
             {
                 name: "Taissa Lorayne",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99909-7207"
+                info: "Tel: (66)99909-7207\nEmail:"
             },
             {
                 name: "Lorrayne Cristina",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99243-1018"
+                info: "Tel: (66)99243-1018\nEmail:"
             },
             {
                 name: "Lilian Payão",
                 icon: "fa-chart-line",
-                info: "Tel: (66)99220-8501"
+                info: "Tel: (66)99220-8501\nEmail:"
             }
         ]
     },
@@ -110,7 +120,7 @@ const quickContactsData = [
             {
                 name: "Crislaine",
                 icon: "fa-bullhorn",
-                info: "Tel: (18)99726-6639"
+                info: "Tel: (18)99726-6639\nEmail:"
             }
         ]
     },
