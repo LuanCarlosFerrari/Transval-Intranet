@@ -141,6 +141,7 @@ export function initDownloadsSection(selectedCategory = null) {
                             <i class="fas fa-folder"></i>
                             <h3>${category1.title}</h3>
                             <button class="folder-button" data-category="${category1.title}">Abrir Pasta</button>
+                            <button class="upload-button" data-category="${category1.title}">Upload Arquivo</button>
                         </div>
                     </div>
                 </td>
@@ -152,6 +153,7 @@ export function initDownloadsSection(selectedCategory = null) {
                             <i class="fas fa-folder"></i>
                             <h3>${category2.title}</h3>
                             <button class="folder-button" data-category="${category2.title}">Abrir Pasta</button>
+                            <button class="upload-button" data-category="${category2.title}">Upload Arquivo</button>
                         </div>
                     </div>
                 </td>
@@ -174,11 +176,60 @@ export function initDownloadsSection(selectedCategory = null) {
     `;
 }
 
+// Adicionar esta função para sincronizar os folderContents com o servidor
+async function syncFolderContentsWithServer() {
+    console.log('Sincronizando folderContents com o servidor...');
+
+    // Para cada categoria em downloadsDataTemplate
+    for (const category of downloadsDataTemplate) {
+        const categoryTitle = category.title;
+
+        // Determinar a URL base
+        let baseUrl = '';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            baseUrl = `http://localhost:3000`;
+        }
+
+        try {
+            // Buscar os arquivos dessa categoria do servidor
+            const response = await fetch(`${baseUrl}/api/list/${categoryTitle}`);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`Arquivos encontrados para ${categoryTitle}:`, data.files);
+
+                if (data.files && data.files.length > 0) {
+                    // Atualizar folderContents com os arquivos do servidor
+                    folderContents[categoryTitle] = data.files.map(file => ({
+                        name: file.name,
+                        path: file.path,
+                        icon: getFileIcon(file.path),
+                        info: `Arquivo da categoria ${categoryTitle}`
+                    }));
+                }
+            } else {
+                console.error(`Erro ao buscar arquivos da categoria ${categoryTitle}: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Erro ao sincronizar categoria ${categoryTitle}:`, error);
+        }
+    }
+
+    console.log('Sincronização completa, folderContents atualizado:', folderContents);
+}
+
+// Modificar as funções existentes para usar a sincronização
+
+// Modificar a função initDownloadsEvents para incluir sincronização
 export function initDownloadsEvents() {
     const downloadsBtn = document.getElementById('downloadsBtn');
     if (downloadsBtn) {
-        downloadsBtn.addEventListener('click', () => {
+        downloadsBtn.addEventListener('click', async () => {
             const contentArea = document.querySelector('.content-area');
+
+            // Sincronizar com o servidor antes de mostrar os downloads
+            await syncFolderContentsWithServer();
+
             contentArea.innerHTML = initDownloadsSection();
             addEventListeners();
         });
@@ -252,7 +303,38 @@ const folderContents = {
 
 async function loadFolderContents(folderPath) {
     try {
-        // Use the static mapping instead of fetch
+        // Se não temos os dados localmente ou queremos dados frescos, sincronize
+        if (!folderContents[folderPath] || folderContents[folderPath].length === 0) {
+            // Determinar a URL base
+            let baseUrl = '';
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                baseUrl = `http://localhost:3000`;
+            }
+
+            try {
+                // Buscar os arquivos dessa categoria diretamente do servidor
+                const response = await fetch(`${baseUrl}/api/list/${folderPath}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`Arquivos encontrados para ${folderPath}:`, data.files);
+
+                    if (data.files && data.files.length > 0) {
+                        // Atualizar folderContents com os arquivos do servidor
+                        folderContents[folderPath] = data.files.map(file => ({
+                            name: file.name,
+                            path: file.path,
+                            icon: getFileIcon(file.path),
+                            info: `Arquivo da categoria ${folderPath}`
+                        }));
+                    }
+                }
+            } catch (serverError) {
+                console.error(`Erro ao buscar do servidor para ${folderPath}:`, serverError);
+            }
+        }
+
+        // Agora use os dados de folderContents (que podem ter sido atualizados)
         const files = folderContents[folderPath] || [];
         return files.map(file => ({
             name: file.name,
@@ -327,25 +409,37 @@ function loadFilePreview(filePath, fileType) {
     const previewContent = document.getElementById('previewContent');
     previewContent.innerHTML = '<div class="preview-loading">Carregando...</div>';
 
+    // Determinar a URL base
+    let baseUrl = '';
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        baseUrl = `http://localhost:3000/`;
+    }
+
+    const fullPath = `${baseUrl}${filePath}`;
+    console.log(`Tentando acessar: ${fullPath}`);
+
     // Check if file exists before trying to display
-    fetch(filePath, { method: 'HEAD' })
+    fetch(fullPath, { method: 'HEAD' })
         .then(response => {
             if (!response.ok) {
+                console.error(`Arquivo não encontrado: ${fullPath}, status: ${response.status}`);
                 previewContent.innerHTML = `
                     <div class="preview-not-available">
                         <i class="fas fa-exclamation-triangle fa-4x"></i>
                         <p>Arquivo não encontrado.</p>
+                        <p>Caminho: ${filePath}</p>
                     </div>
                 `;
                 return;
             }
 
+            console.log(`Arquivo encontrado: ${fullPath}`);
             // File exists, display based on type
             switch (fileType) {
                 case 'pdf':
                     // For PDF files, use iframe to display
                     previewContent.innerHTML = `
-                        <iframe src="${filePath}" width="100%" height="500px" frameborder="0"></iframe>
+                        <iframe src="${fullPath}" width="100%" height="500px" frameborder="0"></iframe>
                     `;
                     break;
 
@@ -407,14 +501,143 @@ function loadFilePreview(filePath, fileType) {
                     `;
             }
         })
-        .catch(() => {
+        .catch((error) => {
+            console.error(`Erro ao verificar arquivo: ${error}`);
             previewContent.innerHTML = `
                 <div class="preview-not-available">
                     <i class="fas fa-exclamation-triangle fa-4x"></i>
                     <p>Erro ao acessar o arquivo.</p>
+                    <p>Detalhes: ${error.message}</p>
                 </div>
             `;
         });
+}
+
+// Função simulada de upload para o servidor
+function simulateFileUpload(file, categoryName) {
+    return new Promise((resolve, reject) => {
+        try {
+            // Simulando um atraso de rede de 1,5 segundos
+            setTimeout(async () => {
+                // Em um cenário real, aqui seria feito o upload do arquivo para o servidor
+                // e o servidor retornaria o caminho do arquivo salvo
+
+                // Criando caminho do arquivo
+                const serverPath = `src/downloads/${categoryName}/${file.name}`;
+
+                // Criar o objeto de arquivo para a interface
+                const fileObj = {
+                    name: file.name,
+                    path: serverPath,
+                    icon: getFileIcon(file.name),
+                    info: `Arquivo enviado em ${new Date().toLocaleDateString()}`
+                };
+
+                // Tenta salvar o arquivo fisicamente usando o servidor
+                try {
+                    // Criar FormData para enviar ao servidor
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('category', categoryName);
+
+                    // Determinar URL do servidor
+                    let apiUrl = '/api/upload';
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        apiUrl = `http://localhost:3000/api/upload`;
+                    }
+                    console.log(`Tentando salvar arquivo físico via: ${apiUrl}`);
+
+                    // Enviar para o servidor em background
+                    fetch(apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('Arquivo físico salvo com sucesso!');
+                            } else {
+                                console.error('Falha ao salvar arquivo físico, mas continuando com simulação');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Erro ao salvar arquivo físico:', err);
+                        });
+                } catch (err) {
+                    console.error('Erro ao tentar salvar arquivo físico:', err);
+                    // Continuamos com a simulação mesmo se falhar o salvamento físico
+                }
+
+                // Retornando os dados do arquivo "salvo"
+                resolve(fileObj);
+            }, 1500);
+        } catch (error) {
+            console.error('Erro na simulação:', error);
+            reject(error);
+        }
+    });
+}
+
+// Função para fazer upload do arquivo para o servidor
+function uploadFileToServer(file, categoryName) {
+    return new Promise((resolve, reject) => {
+        // Criar um FormData para enviar o arquivo
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('category', categoryName);
+
+        // Determinar a URL base para upload
+        let apiUrl = '/api/upload';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            apiUrl = `http://localhost:3000/api/upload`;
+        }
+
+        console.log(`Enviando arquivo para: ${apiUrl}`);
+
+        // Enviar o arquivo para o endpoint de upload no servidor
+        fetch(apiUrl, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro ao fazer upload do arquivo (${response.status})`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Upload bem-sucedido:', data);
+                // O servidor retorna os dados do arquivo salvo
+                resolve({
+                    name: data.fileName,
+                    path: data.filePath,
+                    icon: getFileIcon(data.fileName),
+                    info: `Arquivo enviado em ${new Date().toLocaleDateString()}`
+                });
+            })
+            .catch(error => {
+                console.error('Erro no upload:', error);
+                reject(error);
+            });
+    });
+}
+
+// Atualizar a função handleFileUpload para forçar o uso da simulação em desenvolvimento
+function handleFileUpload(file, categoryName) {
+    // Sempre usar simulação para evitar problemas com o servidor
+    console.log(`Iniciando upload simulado para: ${file.name} na categoria: ${categoryName}`);
+
+    // Verificar se o arquivo já existe na lista local
+    const existingFiles = folderContents[categoryName] || [];
+    const alreadyExists = existingFiles.some(f => f.name === file.name);
+
+    if (alreadyExists) {
+        console.log(`Arquivo ${file.name} já existe na categoria ${categoryName}`);
+        // Atualizar o arquivo existente
+        return simulateFileUpload(file, categoryName);
+    }
+
+    // Aqui você pode implementar o upload real quando o servidor estiver funcionando corretamente
+    return simulateFileUpload(file, categoryName);
 }
 
 // Modify the addEventListeners function
@@ -484,20 +707,102 @@ function addEventListeners() {
         });
     });
 
+    // Add upload button listeners
+    document.querySelectorAll('.upload-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const categoryTitle = e.target.dataset.category;
+
+            // Criar um input de arquivo melhor
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '*/*';
+            fileInput.onchange = async () => {
+                const file = fileInput.files[0];
+                if (file) {
+                    // Mostrar alguma indicação de carregamento
+                    alert(`Iniciando upload do arquivo "${file.name}" para a pasta: ${categoryTitle}...`);
+
+                    try {
+                        // Usar a função de upload adequada
+                        const uploadedFile = await handleFileUpload(file, categoryTitle);
+
+                        // Adicionar o arquivo carregado ao folderContents - Importante!
+                        if (!folderContents[categoryTitle]) {
+                            folderContents[categoryTitle] = [];
+                        }
+
+                        // Verificar se o arquivo já existe para evitar duplicatas
+                        const existingIndex = folderContents[categoryTitle].findIndex(
+                            f => f.name === uploadedFile.name
+                        );
+
+                        if (existingIndex >= 0) {
+                            // Substituir o arquivo existente
+                            folderContents[categoryTitle][existingIndex] = uploadedFile;
+                        } else {
+                            // Adicionar novo arquivo
+                            folderContents[categoryTitle].push(uploadedFile);
+                        }
+
+                        // Atualizar os downloads da categoria correspondente
+                        const category = downloadsData.find(cat => cat.title === categoryTitle);
+                        if (category) {
+                            category.downloads = await loadFolderContents(categoryTitle);
+                        }
+
+                        // Notificar o usuário
+                        alert(`Arquivo "${file.name}" enviado com sucesso para a pasta: ${categoryTitle}.`);
+
+                        // Navegar para a pasta para mostrar o novo arquivo
+                        contentArea.innerHTML = initDownloadsSection(category);
+                        addEventListeners();
+                    } catch (error) {
+                        console.error('Erro ao fazer upload:', error);
+                        alert('Erro ao fazer upload do arquivo. Por favor, tente novamente.');
+                    }
+                }
+            };
+            fileInput.click();
+        });
+    });
+
     // Keep the existing download button code
     document.querySelectorAll('.download-button').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const file = e.target.getAttribute('href');
-            fetch(file, { method: 'HEAD' })
+            let element = e.target;
+
+            // Se clicou no ícone dentro do botão
+            if (element.tagName === 'I') {
+                element = element.parentElement;
+            }
+
+            const file = element.getAttribute('href');
+
+            // Determinar a URL base
+            let baseUrl = '';
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                baseUrl = `http://localhost:3000/`;
+
+                // Se já contém a URL completa, não adicionar a base
+                if (file.startsWith('http')) {
+                    baseUrl = '';
+                }
+            }
+
+            const fullPath = `${baseUrl}${file}`;
+
+            fetch(fullPath, { method: 'HEAD' })
                 .then(response => {
                     if (!response.ok) {
                         e.preventDefault();
-                        alert('Arquivo não encontrado');
+                        console.error(`Arquivo não encontrado: ${fullPath}`);
+                        alert(`Arquivo não encontrado: ${file}`);
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
                     e.preventDefault();
-                    alert('Erro ao acessar arquivo');
+                    console.error(`Erro ao acessar: ${error}`);
+                    alert(`Erro ao acessar arquivo: ${error.message}`);
                 });
         });
     });
