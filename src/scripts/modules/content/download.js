@@ -2,19 +2,27 @@ let currentPath = [];
 
 const downloadsDataTemplate = [
     {
-        title: "Apostilas",
-        downloads: []
-    },
-    {
-        title: "R.H",
-        downloads: []
-    },
-    {
-        title: "Políticas",
+        title: "Agenciamento",
         downloads: []
     },
     {
         title: "Aplicativos",
+        downloads: []
+    },
+    {
+        title: "Controladoria",
+        downloads: []
+    },
+    {
+        title: "Faturamento",
+        downloads: []
+    },
+    {
+        title: "Motoristas Frota",
+        downloads: []
+    },
+    {
+        title: "R.H",
         downloads: []
     }
 ];
@@ -150,9 +158,55 @@ export function initDownloadsEvents() {
 
 // Create a static mapping of folder contents
 const folderContents = {
+    "Agenciamento": [
+        // Currently empty folder
+    ],
+    "Aplicativos": [
+        {
+            name: "Renomeador de Arquivos",
+            icon: "fa-file-code",
+            info: "Aplicativo criado para o contas a pagar de Rinópolis que renomeia arquivos de acordo com o fornecedor",
+            path: "src/downloads/Aplicativos/PDF_RENAME.exe"
+        }
+    ],
+    "Controladoria": [
+        {
+            name: "Apresentação Geral Controladoria",
+            icon: "fa-file-powerpoint",
+            info: "Apresentação geral do setor de controladoria",
+            path: "src/downloads/Controladoria/Transval_Apresentação Geral Controladoria.pptx"
+        }
+    ],
+    "Faturamento": [
+        {
+            name: "Manual Faturamento",
+            icon: "fa-file-word",
+            info: "Manual de procedimentos de faturamento",
+            path: "src/downloads/Faturamento/Transval_Manual Faturamento.docx"
+        }
+    ],
+    "Motoristas Frota": [
+        {
+            name: "Integração de Segurança",
+            icon: "fa-file-powerpoint",
+            info: "Apresentação de integração de segurança para motoristas",
+            path: "src/downloads/Motoristas Frota/Transval_INTEGRAÇÃO SEGURANÇA TRANSVAL - Motoristas.pptx"
+        },
+        {
+            name: "Treinamento: Distrações no Trânsito",
+            icon: "fa-file-powerpoint",
+            info: "Treinamento sobre distrações no trânsito para motoristas",
+            path: "src/downloads/Motoristas Frota/Transval_TREINAMENTO DISTRAÇÕES NO TRANSITO.pptx"
+        },
+        {
+            name: "Treinamento: Limite de Velocidade",
+            icon: "fa-file-powerpoint",
+            info: "Treinamento sobre limites de velocidade para motoristas",
+            path: "src/downloads/Motoristas Frota/Transval_TREINAMENTO LIMITE DE VELOCIDADE.pptx"
+        }
+    ],
     "R.H": [
         {
-
             name: "Apostila Gerencial",
             icon: "fa-file-pdf",
             info: "Manual de procedimentos gerenciais",
@@ -164,18 +218,6 @@ const folderContents = {
             info: "Manual PDV",
             path: "src/downloads/R.H/Apostila PDV - Capa Nova.pdf"
         }
-        ,
-        // ... other files
-    ],
-    "Aplicativos": [
-        {
-
-            name: "Renomeador de Arquivos",
-            icon: "fa-file-pdf",
-            info: "Aplicativo criado para o contas a pagar de Rinópolis que renomeia arquivos de acordo com o fornecedor",
-            path: "src/downloads/Aplicativos/PDF_RENAME.exe"
-        },
-        // ... other files
     ]
 };
 
@@ -185,14 +227,24 @@ async function loadFolderContents(folderPath) {
         const files = folderContents[folderPath] || [];
         return files.map(file => ({
             name: file.name,
-            icon: file.name.toLowerCase().endsWith('.pdf') ? 'fa-file-pdf' : 'fa-file',
-            info: '',
+            icon: getFileIcon(file.path),
+            info: file.info || '',
             path: file.path
         }));
     } catch (error) {
         console.error('Error loading folder contents:', error);
         return [];
     }
+}
+
+// Helper function to determine file icon based on extension
+function getFileIcon(filePath) {
+    if (filePath.toLowerCase().endsWith('.pdf')) return 'fa-file-pdf';
+    if (filePath.toLowerCase().endsWith('.docx') || filePath.toLowerCase().endsWith('.doc')) return 'fa-file-word';
+    if (filePath.toLowerCase().endsWith('.pptx') || filePath.toLowerCase().endsWith('.ppt')) return 'fa-file-powerpoint';
+    if (filePath.toLowerCase().endsWith('.xlsx') || filePath.toLowerCase().endsWith('.xls')) return 'fa-file-excel';
+    if (filePath.toLowerCase().endsWith('.exe')) return 'fa-file-code';
+    return 'fa-file';
 }
 
 // Modify the event listener for folder buttons
