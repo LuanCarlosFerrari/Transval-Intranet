@@ -31,3 +31,4 @@ Este documento contém orientações para manter o código organizado e evitar p
 ### Manutenção
 - Execute regularmente `npm prune` para remover dependências não utilizadas
 - Verifique a existência de arquivos duplicados nas pastas de download
+### npm run dev-win
