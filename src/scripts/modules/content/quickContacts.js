@@ -222,34 +222,4 @@ export function initQuickContactsSection() {
     `;
 }
 
-function filterContacts() {
-    const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
-    const department = document.getElementById('departmentFilter').value;
-    const departments = document.querySelectorAll('.department-section');
-
-    departments.forEach(dept => {
-        const isDepartmentMatch = !department || dept.dataset.department === department;
-        const contacts = dept.querySelectorAll('.contact-card');
-        let hasVisibleContacts = false;
-
-        contacts.forEach(contact => {
-            const matchesSearch = contact.textContent.toLowerCase().includes(searchTerm);
-            contact.style.display = matchesSearch ? 'block' : 'none';
-            if (matchesSearch) hasVisibleContacts = true;
-        });
-
-        dept.style.display = isDepartmentMatch && hasVisibleContacts ? 'block' : 'none';
-    });
-}
-
-export function initQuickContactsEvents() {
-    const searchInput = document.getElementById('contactSearch');
-    const departmentFilter = document.getElementById('departmentFilter');
-
-    if (searchInput) {
-        searchInput.addEventListener('input', filterContacts);
-    }
-    if (departmentFilter) {
-        departmentFilter.addEventListener('change', filterContacts);
-    }
-}
+// Função initQuickContactsEvents removida pois não está sendo utilizada

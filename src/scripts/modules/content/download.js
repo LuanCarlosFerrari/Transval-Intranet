@@ -30,7 +30,7 @@ const downloadsDataTemplate = [
 // Create a working copy that we'll modify
 let downloadsData = JSON.parse(JSON.stringify(downloadsDataTemplate));
 
-// First, add a helper function to get file extensions
+// Helper function to get file extensions
 function getFileExtension(filePath) {
     const parts = filePath.split('.');
     return parts[parts.length - 1].toLowerCase();
@@ -217,8 +217,6 @@ async function syncFolderContentsWithServer() {
 
     console.log('Sincronização completa, folderContents atualizado:', folderContents);
 }
-
-// Modificar as funções existentes para usar a sincronização
 
 // Modificar a função initDownloadsEvents para incluir sincronização
 export function initDownloadsEvents() {
@@ -513,74 +511,16 @@ function loadFilePreview(filePath, fileType) {
         });
 }
 
-// Função simulada de upload para o servidor
-function simulateFileUpload(file, categoryName) {
+/**
+ * Função unificada para upload de arquivo
+ * @param {File} file - O arquivo a ser enviado
+ * @param {string} categoryName - A categoria para onde o arquivo será enviado
+ * @param {boolean} useSimulation - Se deve simular o upload (true) ou usar o servidor real (false)
+ * @returns {Promise} - Promise com os dados do arquivo enviado
+ */
+function uploadFile(file, categoryName, useSimulation = false) {
     return new Promise((resolve, reject) => {
-        try {
-            // Simulando um atraso de rede de 1,5 segundos
-            setTimeout(async () => {
-                // Em um cenário real, aqui seria feito o upload do arquivo para o servidor
-                // e o servidor retornaria o caminho do arquivo salvo
-
-                // Criando caminho do arquivo
-                const serverPath = `src/downloads/${categoryName}/${file.name}`;
-
-                // Criar o objeto de arquivo para a interface
-                const fileObj = {
-                    name: file.name,
-                    path: serverPath,
-                    icon: getFileIcon(file.name),
-                    info: `Arquivo enviado em ${new Date().toLocaleDateString()}`
-                };
-
-                // Tenta salvar o arquivo fisicamente usando o servidor
-                try {
-                    // Criar FormData para enviar ao servidor
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('category', categoryName);
-
-                    // Determinar URL do servidor
-                    let apiUrl = '/api/upload';
-                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                        apiUrl = `http://localhost:3000/api/upload`;
-                    }
-                    console.log(`Tentando salvar arquivo físico via: ${apiUrl}`);
-
-                    // Enviar para o servidor em background
-                    fetch(apiUrl, {
-                        method: 'POST',
-                        body: formData
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                console.log('Arquivo físico salvo com sucesso!');
-                            } else {
-                                console.error('Falha ao salvar arquivo físico, mas continuando com simulação');
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Erro ao salvar arquivo físico:', err);
-                        });
-                } catch (err) {
-                    console.error('Erro ao tentar salvar arquivo físico:', err);
-                    // Continuamos com a simulação mesmo se falhar o salvamento físico
-                }
-
-                // Retornando os dados do arquivo "salvo"
-                resolve(fileObj);
-            }, 1500);
-        } catch (error) {
-            console.error('Erro na simulação:', error);
-            reject(error);
-        }
-    });
-}
-
-// Função para fazer upload do arquivo para o servidor
-function uploadFileToServer(file, categoryName) {
-    return new Promise((resolve, reject) => {
-        // Criar um FormData para enviar o arquivo
+        // Criar FormData para enviar ao servidor
         const formData = new FormData();
         formData.append('file', file);
         formData.append('category', categoryName);
@@ -591,9 +531,32 @@ function uploadFileToServer(file, categoryName) {
             apiUrl = `http://localhost:3000/api/upload`;
         }
 
-        console.log(`Enviando arquivo para: ${apiUrl}`);
+        console.log(`Enviando arquivo para: ${apiUrl}${useSimulation ? ' (modo simulação)' : ''}`);
 
-        // Enviar o arquivo para o endpoint de upload no servidor
+        // Se estamos em modo de simulação, simular um atraso de rede
+        if (useSimulation) {
+            // Criar caminho fictício para o arquivo
+            const serverPath = `src/downloads/${categoryName}/${file.name}`;
+
+            setTimeout(() => {
+                // Executar upload real em segundo plano para persistir o arquivo
+                fetch(apiUrl, {
+                    method: 'POST',
+                    body: formData
+                }).catch(err => console.error('Erro na persistência em segundo plano:', err));
+
+                // Retornar resultado simulado
+                resolve({
+                    name: file.name,
+                    path: serverPath,
+                    icon: getFileIcon(file.name),
+                    info: `Arquivo enviado em ${new Date().toLocaleDateString()}`
+                });
+            }, 1500);
+            return;
+        }
+
+        // Upload real para o servidor
         fetch(apiUrl, {
             method: 'POST',
             body: formData
@@ -606,7 +569,6 @@ function uploadFileToServer(file, categoryName) {
             })
             .then(data => {
                 console.log('Upload bem-sucedido:', data);
-                // O servidor retorna os dados do arquivo salvo
                 resolve({
                     name: data.fileName,
                     path: data.filePath,
@@ -621,10 +583,12 @@ function uploadFileToServer(file, categoryName) {
     });
 }
 
-// Atualizar a função handleFileUpload para forçar o uso da simulação em desenvolvimento
+// Função simplificada para gerenciar o upload de arquivo
 function handleFileUpload(file, categoryName) {
-    // Sempre usar simulação para evitar problemas com o servidor
-    console.log(`Iniciando upload simulado para: ${file.name} na categoria: ${categoryName}`);
+    // Em ambiente de desenvolvimento, use simulação
+    const useSimulation = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    console.log(`Iniciando upload ${useSimulation ? 'simulado' : 'real'} para: ${file.name} na categoria: ${categoryName}`);
 
     // Verificar se o arquivo já existe na lista local
     const existingFiles = folderContents[categoryName] || [];
@@ -632,12 +596,9 @@ function handleFileUpload(file, categoryName) {
 
     if (alreadyExists) {
         console.log(`Arquivo ${file.name} já existe na categoria ${categoryName}`);
-        // Atualizar o arquivo existente
-        return simulateFileUpload(file, categoryName);
     }
 
-    // Aqui você pode implementar o upload real quando o servidor estiver funcionando corretamente
-    return simulateFileUpload(file, categoryName);
+    return uploadFile(file, categoryName, useSimulation);
 }
 
 // Modify the addEventListeners function

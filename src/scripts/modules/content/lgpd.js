@@ -24,17 +24,4 @@ export function initLGPDSection() {
     `;
 }
 
-// Event listener initialization can be handled by the main navigation module
-export function initLGPDEvents() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', handleTabButtonClick);
-    });
-}
-
-function handleTabButtonClick() {
-    if (this.getAttribute('href')?.includes('lgpd.pdf')) {
-        // Track PDF downloads or implement additional functionality
-        console.log('LGPD PDF download requested');
-    }
-}
+// Função initLGPDEvents removida pois não está sendo utilizada
