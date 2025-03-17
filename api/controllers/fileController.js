@@ -319,3 +319,30 @@ exports.serveFile = (res, filePath, contentType) => {
         console.log(`Arquivo servido: ${fullPath}`);
     });
 };
+
+// Adicionar função para listar todas as pastas disponíveis
+exports.listAllFolders = (req, res) => {
+    const baseDir = path.join(ROOT_DIR, 'src', 'downloads');
+
+    try {
+        // Verificar se o diretório base existe
+        if (!fs.existsSync(baseDir)) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ folders: [] }));
+            return;
+        }
+
+        // Listar todas as pastas (diretórios)
+        const folders = fs.readdirSync(baseDir, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ folders }));
+        console.log(`Listadas ${folders.length} pastas`);
+    } catch (error) {
+        console.error('Erro ao listar pastas:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Erro ao listar pastas' }));
+    }
+};

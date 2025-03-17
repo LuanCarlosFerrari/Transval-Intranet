@@ -104,6 +104,13 @@ exports.handleRequest = async (req, res) => {
         return;
     }
 
+    // Listar todas as pastas disponíveis (rota protegida)
+    if (req.method === 'GET' && pathname === '/api/list-folders') {
+        // You can add authentication check here if needed
+        fileController.listAllFolders(req, res);
+        return;
+    }
+
     // Upload de arquivos (rota protegida)
     if (req.method === 'POST' && pathname === '/api/upload') {
         // You can add authentication check here if needed

@@ -1,39 +1,82 @@
 let currentPath = [];
 
-const downloadsDataTemplate = [
-    {
-        title: "Agenciamento",
-        downloads: []
-    },
-    {
-        title: "Aplicativos",
-        downloads: []
-    },
-    {
-        title: "Controladoria",
-        downloads: []
-    },
-    {
-        title: "Faturamento",
-        downloads: []
-    },
-    {
-        title: "Motoristas Frota",
-        downloads: []
-    },
-    {
-        title: "R.H",
-        downloads: []
-    }
-];
-
-// Create a working copy that we'll modify
-let downloadsData = JSON.parse(JSON.stringify(downloadsDataTemplate));
+// Inicializar com arrays vazios em vez de dados hardcoded
+let downloadsDataTemplate = [];
+let downloadsData = [];
+const folderContents = {};
 
 // Helper function to get file extensions
 function getFileExtension(filePath) {
     const parts = filePath.split('.');
     return parts[parts.length - 1].toLowerCase();
+}
+
+// Função para carregar inicialmente todas as pastas e dados
+async function initializeDownloadsData() {
+    console.log('Inicializando dados de downloads...');
+
+    // Determinar a URL base
+    let baseUrl = '';
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        baseUrl = `http://localhost:3000`;
+    }
+
+    try {
+        // 1. Primeiro, buscar todas as pastas disponíveis
+        const foldersResponse = await fetch(`${baseUrl}/api/list-folders`);
+        if (!foldersResponse.ok) {
+            throw new Error(`Erro ao buscar pastas: ${foldersResponse.status}`);
+        }
+
+        const foldersData = await foldersResponse.json();
+        console.log('Pastas encontradas:', foldersData.folders);
+
+        // 2. Configurar o template com as pastas encontradas
+        downloadsDataTemplate = foldersData.folders.map(folder => ({
+            title: folder,
+            downloads: []
+        }));
+
+        // 3. Ordenar pastas alfabeticamente
+        downloadsDataTemplate.sort((a, b) => a.title.localeCompare(b.title));
+
+        // 4. Inicializar a cópia de trabalho
+        downloadsData = JSON.parse(JSON.stringify(downloadsDataTemplate));
+
+        // 5. Para cada pasta, buscar seus arquivos e preparar o folderContents
+        for (const folder of foldersData.folders) {
+            try {
+                const filesResponse = await fetch(`${baseUrl}/api/list/${folder}`);
+                if (filesResponse.ok) {
+                    const filesData = await filesResponse.json();
+
+                    if (filesData.files && filesData.files.length > 0) {
+                        folderContents[folder] = filesData.files.map(file => ({
+                            name: file.name,
+                            path: file.path,
+                            icon: getFileIcon(file.path),
+                            info: `Arquivo da pasta ${folder}`
+                        }));
+                    } else {
+                        folderContents[folder] = [];
+                    }
+                }
+            } catch (error) {
+                console.error(`Erro ao carregar arquivos da pasta ${folder}:`, error);
+                folderContents[folder] = [];
+            }
+        }
+
+        console.log('Inicialização de dados concluída:', {
+            pastas: downloadsDataTemplate.length,
+            folderContents: Object.keys(folderContents).length
+        });
+
+        return true;
+    } catch (error) {
+        console.error('Erro ao inicializar dados de downloads:', error);
+        return false;
+    }
 }
 
 // Modify the initDownloadsSection function to add preview buttons
@@ -186,174 +229,38 @@ export function initDownloadsSection(selectedCategory = null) {
     `;
 }
 
-// Adicionar esta função para sincronizar os folderContents com o servidor
+// Substituir a função syncFolderContentsWithServer para usar a nova abordagem
 async function syncFolderContentsWithServer() {
-    console.log('Sincronizando folderContents com o servidor...');
-
-    // Para cada categoria em downloadsDataTemplate
-    for (const category of downloadsDataTemplate) {
-        const categoryTitle = category.title;
-
-        // Determinar a URL base
-        let baseUrl = '';
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            baseUrl = `http://localhost:3000`;
-        }
-
-        try {
-            // Buscar os arquivos dessa categoria do servidor
-            const response = await fetch(`${baseUrl}/api/list/${categoryTitle}`);
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log(`Arquivos encontrados para ${categoryTitle}:`, data.files);
-
-                if (data.files && data.files.length > 0) {
-                    // Atualizar folderContents com os arquivos do servidor
-                    folderContents[categoryTitle] = data.files.map(file => ({
-                        name: file.name,
-                        path: file.path,
-                        icon: getFileIcon(file.path),
-                        info: `Arquivo da categoria ${categoryTitle}`
-                    }));
-                }
-            } else {
-                console.error(`Erro ao buscar arquivos da categoria ${categoryTitle}: ${response.status}`);
-            }
-        } catch (error) {
-            console.error(`Erro ao sincronizar categoria ${categoryTitle}:`, error);
-        }
-    }
-
-    console.log('Sincronização completa, folderContents atualizado:', folderContents);
+    console.log('Sincronizando dados com o servidor...');
+    return await initializeDownloadsData();
 }
 
-// Modificar a função initDownloadsEvents para incluir sincronização
+// Modificar a função initDownloadsEvents para incluir sincronização inicial
 export function initDownloadsEvents() {
     const downloadsBtn = document.getElementById('downloadsBtn');
     if (downloadsBtn) {
         downloadsBtn.addEventListener('click', async () => {
             const contentArea = document.querySelector('.content-area');
 
-            // Sincronizar com o servidor antes de mostrar os downloads
-            await syncFolderContentsWithServer();
+            // Mostrar indicador de carregamento
+            contentArea.innerHTML = `
+                <div class="loading-container">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <p>Carregando arquivos...</p>
+                </div>
+            `;
 
+            // Sincronizar com o servidor antes de mostrar os downloads
+            await initializeDownloadsData();
+
+            // Renderizar a interface com os dados atualizados
             contentArea.innerHTML = initDownloadsSection();
             addEventListeners();
         });
     }
-}
 
-// Create a static mapping of folder contents
-const folderContents = {
-    "Agenciamento": [
-        // Currently empty folder
-    ],
-    "Aplicativos": [
-        {
-            name: "Renomeador de Arquivos",
-            icon: "fa-file-code",
-            info: "Aplicativo criado para o contas a pagar de Rinópolis que renomeia arquivos de acordo com o fornecedor",
-            path: "src/downloads/Aplicativos/PDF_RENAME.exe"
-        }
-    ],
-    "Controladoria": [
-        {
-            name: "Apresentação Geral Controladoria",
-            icon: "fa-file-powerpoint",
-            info: "Apresentação geral do setor de controladoria",
-            path: "src/downloads/Controladoria/Transval_Apresentação Geral Controladoria.pptx"
-        }
-    ],
-    "Faturamento": [
-        {
-            name: "Manual Faturamento",
-            icon: "fa-file-word",
-            info: "Manual de procedimentos de faturamento",
-            path: "src/downloads/Faturamento/Transval_Manual Faturamento.docx"
-        }
-    ],
-    "Motoristas Frota": [
-        {
-            name: "Integração de Segurança",
-            icon: "fa-file-powerpoint",
-            info: "Apresentação de integração de segurança para motoristas",
-            path: "src/downloads/Motoristas Frota/Transval_INTEGRAÇÃO SEGURANÇA TRANSVAL - Motoristas.pptx"
-        },
-        {
-            name: "Treinamento: Distrações no Trânsito",
-            icon: "fa-file-powerpoint",
-            info: "Treinamento sobre distrações no trânsito para motoristas",
-            path: "src/downloads/Motoristas Frota/Transval_TREINAMENTO DISTRAÇÕES NO TRANSITO.pptx"
-        },
-        {
-            name: "Treinamento: Limite de Velocidade",
-            icon: "fa-file-powerpoint",
-            info: "Treinamento sobre limites de velocidade para motoristas",
-            path: "src/downloads/Motoristas Frota/Transval_TREINAMENTO LIMITE DE VELOCIDADE.pptx"
-        }
-    ],
-    "R.H": [
-        {
-            name: "Apostila Gerencial",
-            icon: "fa-file-pdf",
-            info: "Manual de procedimentos gerenciais",
-            path: "src/downloads/R.H/Apostila Gerencial - Capa Nova.pdf"
-        },
-        {
-            name: "Apostila PDV",
-            icon: "fa-file-pdf",
-            info: "Manual PDV",
-            path: "src/downloads/R.H/Apostila PDV - Capa Nova.pdf"
-        }
-    ]
-};
-
-async function loadFolderContents(folderPath) {
-    try {
-        // Se não temos os dados localmente ou queremos dados frescos, sincronize
-        if (!folderContents[folderPath] || folderContents[folderPath].length === 0) {
-            // Determinar a URL base
-            let baseUrl = '';
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                baseUrl = `http://localhost:3000`;
-            }
-
-            try {
-                // Buscar os arquivos dessa categoria diretamente do servidor
-                const response = await fetch(`${baseUrl}/api/list/${folderPath}`);
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(`Arquivos encontrados para ${folderPath}:`, data.files);
-
-                    if (data.files && data.files.length > 0) {
-                        // Atualizar folderContents com os arquivos do servidor
-                        folderContents[folderPath] = data.files.map(file => ({
-                            name: file.name,
-                            path: file.path,
-                            icon: getFileIcon(file.path),
-                            info: `Arquivo da categoria ${folderPath}`
-                        }));
-                    }
-                }
-            } catch (serverError) {
-                console.error(`Erro ao buscar do servidor para ${folderPath}:`, serverError);
-            }
-        }
-
-        // Agora use os dados de folderContents (que podem ter sido atualizados)
-        const files = folderContents[folderPath] || [];
-        return files.map(file => ({
-            name: file.name,
-            icon: getFileIcon(file.path),
-            info: file.info || '',
-            path: file.path
-        }));
-    } catch (error) {
-        console.error('Error loading folder contents:', error);
-        return [];
-    }
+    // Carregar os dados uma vez na inicialização para ter dados disponíveis rapidamente
+    initializeDownloadsData();
 }
 
 // Helper function to determine file icon based on extension
@@ -644,6 +551,96 @@ function deleteFile(filePath) {
     });
 }
 
+// Função para criar nova pasta com atualização automática dos dados
+function createFolder(folderName) {
+    return new Promise(async (resolve, reject) => {
+        // Determinar a URL base para requisições
+        let baseUrl = '/api/create-folder';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            baseUrl = `http://localhost:3000/api/create-folder`;
+        }
+
+        try {
+            const response = await fetch(baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ folderName })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Falha na criação da pasta: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Pasta criada com sucesso:', data);
+
+            // Atualizar os dados locais
+            await initializeDownloadsData();
+
+            resolve(data);
+        } catch (error) {
+            console.error('Erro ao criar pasta:', error);
+            reject(error);
+        }
+    });
+}
+
+// Adicionar a função loadFolderContents que estava faltando
+async function loadFolderContents(folderPath) {
+    console.log(`Carregando conteúdo da pasta: ${folderPath}`);
+
+    // Determinar a URL base
+    let baseUrl = '';
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        baseUrl = `http://localhost:3000`;
+    }
+
+    try {
+        // Buscar os arquivos da pasta diretamente do servidor
+        const response = await fetch(`${baseUrl}/api/list/${folderPath}`);
+
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar arquivos: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`Arquivos encontrados para ${folderPath}:`, data.files);
+
+        // Se já temos os arquivos em folderContents, verificar se precisamos atualizar
+        if (folderContents[folderPath] && folderContents[folderPath].length > 0) {
+            console.log(`Usando dados em cache para ${folderPath}`);
+            // Retornamos os dados em cache
+            return folderContents[folderPath].map(file => ({
+                name: file.name,
+                icon: file.icon || getFileIcon(file.path),
+                info: file.info || `Arquivo da pasta ${folderPath}`,
+                path: file.path
+            }));
+        }
+
+        // Caso contrário, processar os arquivos recebidos do servidor
+        if (data.files && data.files.length > 0) {
+            // Atualizar folderContents com os arquivos do servidor
+            folderContents[folderPath] = data.files.map(file => ({
+                name: file.name,
+                path: file.path,
+                icon: getFileIcon(file.path),
+                info: `Arquivo da pasta ${folderPath}`
+            }));
+
+            return folderContents[folderPath];
+        } else {
+            console.log(`Nenhum arquivo encontrado em ${folderPath}`);
+            return [];
+        }
+    } catch (error) {
+        console.error(`Erro ao carregar conteúdo da pasta ${folderPath}:`, error);
+        return [];
+    }
+}
+
 // Modify the addEventListeners function
 function addEventListeners() {
     const contentArea = document.querySelector('.content-area');
@@ -825,6 +822,33 @@ function addEventListeners() {
             }
         });
     });
+
+    // Add create folder button listener if it exists
+    const createFolderBtn = document.getElementById('createFolderBtn');
+    if (createFolderBtn) {
+        createFolderBtn.addEventListener('click', async () => {
+            const folderName = prompt('Digite o nome da nova pasta:');
+            if (!folderName || folderName.trim() === '') {
+                alert('Nome da pasta não pode ser vazio.');
+                return;
+            }
+
+            try {
+                // Criar a pasta - use a função modificada que atualiza os dados
+                await createFolder(folderName.trim());
+
+                // Recarregar a página de downloads usando os dados já atualizados
+                contentArea.innerHTML = initDownloadsSection();
+                addEventListeners();
+
+                // Mostrar mensagem de sucesso
+                alert(`Pasta "${folderName.trim()}" criada com sucesso!`);
+            } catch (error) {
+                console.error('Erro ao criar pasta:', error);
+                alert(`Erro ao criar pasta: ${error.message}`);
+            }
+        });
+    }
 
     // Keep the existing download button code
     document.querySelectorAll('.download-button').forEach(btn => {
