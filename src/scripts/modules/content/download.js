@@ -174,7 +174,7 @@ export function initDownloadsSection(selectedCategory = null) {
             `);
         }
 
-        // Rest of the function remains the same
+        // Modified return with upload button below title
         return `
             <div class="downloads-container">
                 <div class="titulo-container">
@@ -182,6 +182,11 @@ export function initDownloadsSection(selectedCategory = null) {
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                     <h2>${selectedCategory.title}</h2>
+                </div>
+                <div class="upload-container" style="text-align: center; margin-bottom: 20px;">
+                    <button class="upload-button btn-gray" data-category="${selectedCategory.title}">
+                        <i class="fas fa-upload"></i> Upload Arquivo
+                    </button>
                 </div>
                 <table class="downloads-table" width="100%">
                     <tbody>
@@ -208,7 +213,6 @@ export function initDownloadsSection(selectedCategory = null) {
                             <i class="fas fa-folder"></i>
                             <h3>${category1.title}</h3>
                             <button class="folder-button" data-category="${category1.title}">Abrir Pasta</button>
-                            <button class="upload-button" data-category="${category1.title}">Upload Arquivo</button>
                         </div>
                     </div>
                 </td>
@@ -220,7 +224,6 @@ export function initDownloadsSection(selectedCategory = null) {
                             <i class="fas fa-folder"></i>
                             <h3>${category2.title}</h3>
                             <button class="folder-button" data-category="${category2.title}">Abrir Pasta</button>
-                            <button class="upload-button" data-category="${category2.title}">Upload Arquivo</button>
                         </div>
                     </div>
                 </td>
