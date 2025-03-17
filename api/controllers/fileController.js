@@ -228,6 +228,56 @@ exports.handleSimplifiedUpload = (req, res) => {
     });
 };
 
+// Função para deletar um arquivo
+exports.deleteFile = (req, res) => {
+    const { filePath } = req.body; // Esperamos receber o caminho do arquivo a ser deletado
+
+    if (!filePath) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Caminho do arquivo não fornecido' }));
+        return;
+    }
+
+    // Normalizar o caminho e garantir que não acesse diretórios fora da pasta de downloads
+    const normalizedPath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+    const fullPath = path.join(ROOT_DIR, normalizedPath);
+
+    // Verificar se o caminho está dentro da pasta de downloads para segurança
+    const downloadsDir = path.join(ROOT_DIR, 'src', 'downloads');
+    if (!fullPath.startsWith(downloadsDir)) {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Acesso negado ao caminho especificado' }));
+        return;
+    }
+
+    // Verificar se o arquivo existe
+    fs.access(fullPath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error(`Arquivo não existe: ${fullPath}`);
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Arquivo não encontrado' }));
+            return;
+        }
+
+        // Deletar o arquivo
+        fs.unlink(fullPath, (err) => {
+            if (err) {
+                console.error(`Erro ao deletar arquivo: ${err}`);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Erro ao deletar arquivo' }));
+                return;
+            }
+
+            console.log(`Arquivo deletado com sucesso: ${fullPath}`);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                message: 'Arquivo deletado com sucesso',
+                deletedFile: normalizedPath
+            }));
+        });
+    });
+};
+
 // Helper functions for file operations
 exports.checkFileExists = (res, filePath) => {
     const fullPath = path.join(ROOT_DIR, filePath);

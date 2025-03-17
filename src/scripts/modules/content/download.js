@@ -77,6 +77,11 @@ export function initDownloadsSection(selectedCategory = null) {
                                    data-filetype="${getFileExtension(file1.path)}">
                                    <i class="fas fa-download"></i> Baixar
                                 </a>
+                                <a href="javascript:void(0)" 
+                                   class="delete-button"
+                                   data-filepath="${file1.path}">
+                                   <i class="fas fa-trash"></i> Deletar
+                                </a>
                             </div>
                         </div>
                     </td>
@@ -98,6 +103,11 @@ export function initDownloadsSection(selectedCategory = null) {
                                    class="download-button"
                                    data-filetype="${getFileExtension(file2.path)}">
                                    <i class="fas fa-download"></i> Baixar
+                                </a>
+                                <a href="javascript:void(0)" 
+                                   class="delete-button"
+                                   data-filepath="${file2.path}">
+                                   <i class="fas fa-trash"></i> Deletar
                                 </a>
                             </div>
                         </div>
@@ -601,6 +611,39 @@ function handleFileUpload(file, categoryName) {
     return uploadFile(file, categoryName, useSimulation);
 }
 
+// Função para deletar um arquivo
+function deleteFile(filePath) {
+    return new Promise((resolve, reject) => {
+        // Determinar a URL base para requisições
+        let baseUrl = '/api/delete-file';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            baseUrl = `http://localhost:3000/api/delete-file`;
+        }
+
+        fetch(baseUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ filePath })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Falha na exclusão: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Arquivo deletado com sucesso:', data);
+                resolve(data);
+            })
+            .catch(error => {
+                console.error('Erro ao deletar arquivo:', error);
+                reject(error);
+            });
+    });
+}
+
 // Modify the addEventListeners function
 function addEventListeners() {
     const contentArea = document.querySelector('.content-area');
@@ -724,6 +767,62 @@ function addEventListeners() {
                 }
             };
             fileInput.click();
+        });
+    });
+
+    // Add delete button listeners
+    document.querySelectorAll('.delete-button').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            let element = e.target;
+
+            // If we clicked on the icon inside the button, get the parent element
+            if (element.tagName === 'I') {
+                element = element.parentElement;
+            }
+
+            const filePath = element.dataset.filepath;
+            const fileName = filePath.split('/').pop();
+
+            // Confirm before deletion
+            if (!confirm(`Tem certeza que deseja deletar o arquivo "${fileName}"? Esta ação não pode ser desfeita.`)) {
+                return;
+            }
+
+            try {
+                // Show loading state
+                const originalText = element.innerHTML;
+                element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deletando...';
+                element.style.pointerEvents = 'none';
+
+                // Call API to delete file
+                await deleteFile(filePath);
+
+                // Get category from file path
+                const pathParts = filePath.split('/');
+                const categoryName = pathParts[pathParts.length - 2];
+
+                // Update the category data
+                const category = downloadsData.find(cat => cat.title === categoryName);
+                if (category) {
+                    // Refresh the category contents
+                    category.downloads = await loadFolderContents(categoryName);
+
+                    // Re-render the category view
+                    contentArea.innerHTML = initDownloadsSection(category);
+                    addEventListeners();
+
+                    // Show success message
+                    alert(`Arquivo "${fileName}" deletado com sucesso!`);
+                }
+            } catch (error) {
+                console.error('Falha ao deletar o arquivo:', error);
+                alert(`Erro ao deletar arquivo: ${error.message}`);
+
+                // Restore button state
+                element.innerHTML = originalText;
+                element.style.pointerEvents = '';
+            }
         });
     });
 

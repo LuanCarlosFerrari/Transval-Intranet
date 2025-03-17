@@ -351,7 +351,7 @@
         flex-direction: column; /* Stack buttons vertically on very small screens */
     }
     
-    .preview-button, .download-button {
+    .preview-button, .download-button, .delete-button {
         width: 100%; /* Full width buttons */
         margin-bottom: 5px;
     }
@@ -390,7 +390,7 @@
     margin-top: 10px;
 }
 
-.preview-button, .download-button {
+.preview-button, .download-button, .delete-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -413,13 +413,24 @@
     color: white;
 }
 
+.delete-button {
+    background-color: #d93025;
+    color: white;
+}
+
 .preview-button:hover, .download-button:hover {
     opacity: 0.9;
     transform: translateY(-2px);
     background-color: #444;  /* Slightly lighter on hover */
 }
 
-.preview-button i, .download-button i {
+.delete-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    background-color: #b3261e;  /* Slightly darker red on hover */
+}
+
+.preview-button i, .download-button i, .delete-button i {
     color: white; /* Explicitly set icon color to white */
     margin: 0 4px; /* Equal margins on both sides for better centering */
     font-size: 0.9em;
@@ -428,6 +439,6 @@
 }
 
 /* Center the text vertically as well */
-.preview-button span, .download-button span {
+.preview-button span, .download-button span, .delete-button span {
     vertical-align: middle;
 }
