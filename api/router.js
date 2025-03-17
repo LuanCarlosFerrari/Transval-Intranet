@@ -133,6 +133,73 @@ exports.handleRequest = async (req, res) => {
         return;
     }
 
+    // Adicionar um novo endpoint para renomear arquivos
+    if (req.method === 'POST' && pathname === '/api/rename-file') {
+        try {
+            const bodyStr = await readBody(req);
+            req.body = JSON.parse(bodyStr);
+            const { oldPath, newName, category } = req.body;
+
+            if (!oldPath || !newName || !category) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Parâmetros incompletos para renomear o arquivo' }));
+                return;
+            }
+
+            // Extrair o diretório e o nome do arquivo atual
+            const fs = require('fs').promises;
+            const path = require('path');
+
+            // Caminho base para a pasta de downloads
+            const baseDownloadsPath = path.join(__dirname, '..', 'src', 'downloads');
+
+            // Caminho completo do arquivo atual
+            const oldFilePath = path.join(baseDownloadsPath, category, path.basename(oldPath));
+
+            // Caminho novo para o arquivo
+            const newFilePath = path.join(baseDownloadsPath, category, newName);
+
+            // Verificar se o arquivo existe
+            try {
+                await fs.access(oldFilePath);
+            } catch (error) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Arquivo não encontrado' }));
+                return;
+            }
+
+            // Verificar se já existe um arquivo com o novo nome
+            try {
+                await fs.access(newFilePath);
+                res.writeHead(409, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Já existe um arquivo com este nome' }));
+                return;
+            } catch (error) {
+                // Arquivo não existe, podemos prosseguir com a renomeação
+            }
+
+            // Renomear o arquivo
+            await fs.rename(oldFilePath, newFilePath);
+
+            // Retornar o caminho atualizado do arquivo
+            const newRelativePath = `src/downloads/${category}/${newName}`;
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                success: true,
+                message: 'Arquivo renomeado com sucesso',
+                oldPath: oldPath,
+                newPath: newRelativePath,
+                fileName: newName
+            }));
+        } catch (error) {
+            console.error('Erro ao renomear arquivo:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Erro ao renomear arquivo' }));
+        }
+        return;
+    }
+
     // API endpoint não encontrado
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'API endpoint não encontrado' }));

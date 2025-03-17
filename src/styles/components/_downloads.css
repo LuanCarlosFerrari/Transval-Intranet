@@ -351,7 +351,7 @@
         flex-direction: column; /* Stack buttons vertically on very small screens */
     }
     
-    .preview-button, .download-button, .delete-button {
+    .preview-button, .download-button, .rename-button, .delete-button {
         width: 100%; /* Full width buttons */
         margin-bottom: 5px;
     }
@@ -390,7 +390,7 @@
     margin-top: 10px;
 }
 
-.preview-button, .download-button, .delete-button {
+.preview-button, .download-button, .rename-button, .delete-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -401,44 +401,58 @@
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.85em;  /* Smaller font size */
+    color: white;  /* Garantir que o texto seja branco em todos os botões */
 }
 
-.preview-button {
+/* Botões de ações regulares - mesmo estilo visual base */
+.preview-button, .download-button, .rename-button {
     background-color: #5f5e5e;
     color: white;
 }
 
-.download-button {
-    background-color: #5f5e5e;
-    color: white;
-}
-
+/* Botão de exclusão - mantém cor distinta */
 .delete-button {
     background-color: #d93025;
     color: white;
 }
 
-.preview-button:hover, .download-button:hover {
+/* Efeito hover padronizado para os três primeiros botões */
+.preview-button:hover, .download-button:hover, .rename-button:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    background-color: #444;  /* Slightly lighter on hover */
+    background-color: #444;  /* Mesma cor de hover para todos */
 }
 
 .delete-button:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    background-color: #b3261e;  /* Slightly darker red on hover */
+    background-color: #b3261e;  /* Mantém cor distinta para o botão de deletar */
 }
 
-.preview-button i, .download-button i, .delete-button i {
-    color: white; /* Explicitly set icon color to white */
-    margin: 0 4px; /* Equal margins on both sides for better centering */
+/* Estilo de ícones padronizado */
+.preview-button i, .download-button i, .rename-button i, .delete-button i {
+    color: white;
+    margin: 0 4px;
     font-size: 0.9em;
     display: inline-block;
-    vertical-align: middle; /* Ensure vertical alignment */
+    vertical-align: middle;
 }
 
 /* Center the text vertically as well */
-.preview-button span, .download-button span, .delete-button span {
+.preview-button span, .download-button span, .rename-button span, .delete-button span {
     vertical-align: middle;
+}
+
+/* For very small screens, show only icons */
+@media (max-width: 380px) {
+    .preview-button span, .download-button span, .rename-button span, .delete-button span {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-button, .download-button, .rename-button, .delete-button {
+        width: 100%; /* Full width buttons */
+        margin-bottom: 4px;
+    }
 }

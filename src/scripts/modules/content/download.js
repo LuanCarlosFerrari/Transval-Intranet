@@ -121,6 +121,13 @@ export function initDownloadsSection(selectedCategory = null) {
                                    <i class="fas fa-download"></i> Baixar
                                 </a>
                                 <a href="javascript:void(0)" 
+                                   class="rename-button"
+                                   data-filepath="${file1.path}"
+                                   data-filename="${file1.name}"
+                                   data-category="${selectedCategory.title}">
+                                   <i class="fas fa-edit"></i> Renomear
+                                </a>
+                                <a href="javascript:void(0)" 
                                    class="delete-button"
                                    data-filepath="${file1.path}">
                                    <i class="fas fa-trash"></i> Deletar
@@ -146,6 +153,13 @@ export function initDownloadsSection(selectedCategory = null) {
                                    class="download-button"
                                    data-filetype="${getFileExtension(file2.path)}">
                                    <i class="fas fa-download"></i> Baixar
+                                </a>
+                                <a href="javascript:void(0)" 
+                                   class="rename-button"
+                                   data-filepath="${file2.path}"
+                                   data-filename="${file2.name}"
+                                   data-category="${selectedCategory.title}">
+                                   <i class="fas fa-edit"></i> Renomear
                                 </a>
                                 <a href="javascript:void(0)" 
                                    class="delete-button"
@@ -641,6 +655,39 @@ async function loadFolderContents(folderPath) {
     }
 }
 
+// Função para renomear um arquivo
+function renameFile(oldPath, newName, category) {
+    return new Promise((resolve, reject) => {
+        // Determinar a URL base para requisições
+        let baseUrl = '/api/rename-file';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            baseUrl = `http://localhost:3000/api/rename-file`;
+        }
+
+        fetch(baseUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ oldPath, newName, category })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Falha na renomeação: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Arquivo renomeado com sucesso:', data);
+                resolve(data);
+            })
+            .catch(error => {
+                console.error('Erro ao renomear arquivo:', error);
+                reject(error);
+            });
+    });
+}
+
 // Modify the addEventListeners function
 function addEventListeners() {
     const contentArea = document.querySelector('.content-area');
@@ -815,6 +862,67 @@ function addEventListeners() {
             } catch (error) {
                 console.error('Falha ao deletar o arquivo:', error);
                 alert(`Erro ao deletar arquivo: ${error.message}`);
+
+                // Restore button state
+                element.innerHTML = originalText;
+                element.style.pointerEvents = '';
+            }
+        });
+    });
+
+    // Add rename button listeners
+    document.querySelectorAll('.rename-button').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            let element = e.target;
+
+            // If we clicked on the icon inside the button, get the parent element
+            if (element.tagName === 'I') {
+                element = element.parentElement;
+            }
+
+            const filePath = element.dataset.filepath;
+            const fileName = element.dataset.filename;
+            const category = element.dataset.category;
+
+            // Prompt for new name
+            const newName = prompt(`Digite o novo nome para o arquivo "${fileName}"`, fileName);
+
+            // If canceled or empty, do nothing
+            if (!newName || newName.trim() === '') {
+                return;
+            }
+
+            // If the name didn't change, do nothing
+            if (newName === fileName) {
+                return;
+            }
+
+            try {
+                // Show loading state
+                const originalText = element.innerHTML;
+                element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Renomeando...';
+                element.style.pointerEvents = 'none';
+
+                // Call API to rename file
+                await renameFile(filePath, newName, category);
+
+                // Update the category data
+                const categoryObj = downloadsData.find(cat => cat.title === category);
+                if (categoryObj) {
+                    // Refresh the category contents
+                    categoryObj.downloads = await loadFolderContents(category);
+
+                    // Re-render the category view
+                    contentArea.innerHTML = initDownloadsSection(categoryObj);
+                    addEventListeners();
+
+                    // Show success message
+                    alert(`Arquivo "${fileName}" renomeado para "${newName}" com sucesso!`);
+                }
+            } catch (error) {
+                console.error('Falha ao renomear o arquivo:', error);
+                alert(`Erro ao renomear arquivo: ${error.message}`);
 
                 // Restore button state
                 element.innerHTML = originalText;
